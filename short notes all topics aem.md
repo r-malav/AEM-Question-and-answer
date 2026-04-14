@@ -271,4 +271,139 @@ Used to change the source of injection (e.g., inject from a child resource).
 Use `@Exporter(name = "jackson", extensions = "json")`.
 
 
-*End of Document*
+
+---
+
+### **Section 2: Servlets & OSGi Services**
+
+**11. What is the difference between Path-based and Resource-type-based servlets?**
+*   **Ans:** Path-based servlets use a fixed URL; Resource-type servlets bind to a component and respect AEM security (ACLs).
+
+**12. Why is Resource-type-based servlet preferred?**
+*   **Ans:** It allows for better security, respects the JCR structure, and can be easily managed via Dispatcher.
+
+**13. What is the role of `@Component` in OSGi?**
+*   **Ans:** It marks a class as an OSGi service/component managed by the framework.
+
+**14. What does `immediate = true` do in a Component?**
+*   **Ans:** It activates the component as soon as the bundle starts, without waiting for a reference.
+
+**15. How do you read OSGi configurations in R7?**
+*   **Ans:** Using `@ObjectClassDefinition` (OCD) and passing the configuration interface to the `@Activate` method.
+
+**16. What is the difference between `SlingSafeMethodsServlet` and `SlingAllMethodsServlet`?**
+*   **Ans:** `Safe` handles read-only (GET); `All` handles all methods including data-modifying ones (POST, PUT, DELETE).
+
+**17. What is `@Reference`?**
+*   **Ans:** It is used to inject one OSGi service into another.
+
+**18. How do you handle multiple service implementations for one interface?**
+*   **Ans:** Use Service Ranking (higher number wins) or use a target filter: `@Reference(target = "(prop=value)")`.
+
+**19. Where can you see if a bundle is active?**
+*   **Ans:** In the AEM Web Console (Felix Console) at `/system/console/bundles`.
+
+**20. What is the OSGi Bundle Lifecycle?**
+*   **Ans:** Installed -> Resolved -> Starting -> Active -> Stopping -> Uninstalled.
+
+---
+
+### **Section 3: Security & Service Users**
+
+**21. Why is `loginAdministrative()` deprecated?**
+*   **Ans:** It provides full root access, which is a major security risk. It has been replaced by Service Users.
+
+**22. How do you get a Resource Resolver in a service?**
+*   **Ans:** Use `resolverFactory.getServiceResourceResolver(map)` with a subservice name.
+
+**23. What is a Service User?**
+*   **Ans:** A system-level, passwordless user used by backend code to perform JCR tasks with specific permissions.
+
+**24. What is a "Subservice"?**
+*   **Ans:** A logical name used in Java code that maps to a specific System User in the OSGi config.
+
+**25. Why must you close a Resource Resolver?**
+*   **Ans:** To prevent JCR session leaks, which lead to memory issues and server crashes.
+
+**26. What is the best way to close a Resource Resolver?**
+*   **Ans:** Using a `try-with-resources` block in Java.
+
+**27. What is RepoInit?**
+*   **Ans:** A script-based way to create folders, system users, and set ACLs automatically during deployment.
+
+**28. What is an ACL (Access Control List)?**
+*   **Ans:** A list of permissions (Read, Write, Delete) assigned to a user or group for a specific node.
+
+**29. Does a Deny permission always override an Allow?**
+*   **Ans:** Yes, in AEM/Oak, `Deny` takes precedence regardless of where it is defined.
+
+**30. How do you check if a user has a specific permission in code?**
+*   **Ans:** `session.hasPermission(path, "read")` or using the `AccessControlManager`.
+
+---
+
+### **Section 4: Node vs Resource & JCR**
+
+**31. Difference between Node and Resource?**
+*   **Ans:** Node is JCR-level (low level); Resource is a Sling abstraction (high level) used for rendering.
+
+**32. What is a ValueMap?**
+*   **Ans:** A map-like interface used to read properties of a Resource easily.
+
+**33. What is the role of the ResourceResolver?**
+*   **Ans:** It maps URLs to Resources and provides methods to find/resolve content.
+
+**34. What is a Synthetic Resource?**
+*   **Ans:** A resource that exists in memory for rendering but is not stored in the JCR.
+
+**35. What is the JCR (Java Content Repository)?**
+*   **Ans:** A hierarchical database (Apache Jackrabbit Oak) used by AEM to store content, metadata, and files.
+
+---
+
+### **Section 5: AEM Architecture & Fragments**
+
+**36. Difference between Static and Editable Templates?**
+*   **Ans:** Static templates are developer-only; Editable templates allow authors to define layout and policies without code.
+
+**37. What is a Content Fragment (CF)?**
+*   **Ans:** Content-only, structured data (no layout) used for headless delivery via GraphQL.
+
+**38. What is an Experience Fragment (XF)?**
+*   **Ans:** A group of components with a layout (design) that can be reused across multiple pages or channels.
+
+**39. What is the Role of the Dispatcher?**
+*   **Ans:** It acts as a cache and load balancer, serving static content to reduce load on the Publish instance.
+
+**40. What is AEM as a Cloud Service (AEMaaCS)?**
+*   **Ans:** A cloud-native version of AEM with auto-scaling, microservices for assets, and zero-downtime updates.
+
+**41. What is the difference between Immutable and Mutable content?**
+*   **Ans:** Immutable (`/apps`, `/libs`) cannot be changed at runtime in the cloud; Mutable (`/content`, `/conf`) can.
+
+**42. What is a Clientlib?**
+*   **Ans:** A system to manage CSS and JS files, supporting minification, merging, and dependency management.
+
+**43. What is the Multi-Site Manager (MSM)?**
+*   **Ans:** A tool to manage site variations (Live Copies) from a source (Blueprint).
+
+**44. What is a Selector in an AEM URL?**
+*   **Ans:** A string between the path and extension used to trigger different rendering logic (e.g., `page.mobile.html`).
+
+**45. What is the Sightly (HTL) `data-sly-use`?**
+*   **Ans:** An attribute used to initialize a Java Sling Model or JS file in the HTML template.
+
+**46. How do you handle "Headless" in AEM?**
+*   **Ans:** Using Content Fragments and Persisted GraphQL queries.
+
+**47. What is a Workflow Launcher?**
+*   **Ans:** A trigger that starts a workflow automatically when a node is created or modified.
+
+**48. What is a Service User Mapping?**
+*   **Ans:** An OSGi configuration that links a bundle/subservice to a specific System User.
+
+**49. What is the purpose of `allowProxy = true` in Clientlibs?**
+*   **Ans:** It allows clientlibs in `/apps` to be served securely via `/etc.clientlibs`.
+
+**50. What is the "Style System"?**
+*   **Ans:** A feature allowing authors to choose different visual CSS variations for a component via a dropdown in the UI.
