@@ -267,7 +267,7 @@ In a merged resource (like a Dialog), nodes are merged alphabetically or by thei
 
 ---
 
-### **Summary Table for README.md**
+### **Summary Table for   Sling Resource Merger **
 
 | Property | Purpose | Target |
 | :--- | :--- | :--- |
