@@ -111,7 +111,7 @@ In modern AEM (and AEM Cloud Service), the Dispatcher is configured using a spec
 34. How to cache 404 pages?<br />Answer  :   Use Apache `ErrorDocument` or configure specific cache rules.
 35. What is the impact of a high Statfile-level?<br />Answer  :   More precision, but more `.stat` files created.
 36. How to clear the entire cache?<br />Answer  :   Delete all files in the docroot and touch the `.stat` file.
-37. **Can Dispatcher handle SSL?<br />Answer  :   Yes, but it's usually handled by the Apache module `mod_ssl`.
+37. Can Dispatcher handle SSL?<br />Answer  :   Yes, but it's usually handled by the Apache module `mod_ssl`.
 38. What is "Vanity URL" caching?<br />Answer  :   A specific configuration to allow AEM vanity URLs to be cached.
 39. How to prevent caching of a specific page?<br />Answer  :   Send a `Cache-Control: no-cache` header from AEM.
 40. How to debug cache misses?<br />Answer  :   Check `dispatcher.log` and look for "request not cacheable" messages.
@@ -124,7 +124,7 @@ In modern AEM (and AEM Cloud Service), the Dispatcher is configured using a spec
 45. How to allow only specific query strings?<br />Answer  :   Use the `/query` property in a filter rule.
 46. What is `/method` in filters?<br />Answer  :   Restricts requests based on GET, POST, etc.
 47. How to protect against DoS?<br />Answer  :   Use Apache modules like `mod_evasive` alongside Dispatcher filters.
-48. **Should you allow `/bin/*`?<br />Answer  :   Only for specific servlets; otherwise, it's a security risk.
+48. Should you allow `/bin/*`?<br />Answer  :   Only for specific servlets; otherwise, it's a security risk.
 49. How to handle Dispatcher Security on AEM Cloud?<br />Answer  :   Use the provided `filter.any` in the SDK.
 50. What is the `/selectors` filter?<br />Answer  :   Allows you to block dangerous selectors like `.infinity.json`.
 51. How to allow AJAX requests?<br />Answer  :   Ensure the `.json` extension and the specific path are allowed in filters.
