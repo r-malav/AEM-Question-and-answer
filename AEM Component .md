@@ -206,7 +206,7 @@ This is how the configuration looks in your project code:
 
 ---
 
-###`These four properties are the foundation of the **Sling Resource Merger** and **Component Inheritance**. They allow developers to customize AEM without touching the original code in `/libs`.`
+### **These four properties are the foundation of the **Sling Resource Merger** and **Component Inheritance**. They allow developers to customize AEM without touching the original code in `/libs`.**
 
 ---
 
