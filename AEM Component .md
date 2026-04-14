@@ -12,11 +12,7 @@ This guide covers the core concepts of **AEM Components**, **Dialogs**, **Design
 
 ---
 ### **Part 2: 50 Questions & Answers**
----
 
----
-#### **Component Basics (1-10)**
----
 1.  **What is an AEM Component?**
 <br />Answer  :  A reusable unit of logic and style used to build web pages.
 2.  **What is the node type of a component?**
