@@ -314,59 +314,59 @@ AEM provides a built-in UI tool to test and debug your queries without writing c
 ## 50 Interview Questions & Answers
 
 ### Basics (1-15)
-1.  **What is AEM Query Builder?** An API for building JCR queries using simple key-value pairs.
-2.  **Where can you test queries in AEM?** Via the `/libs/cq/search/content/querydebug.html` tool.
-3.  **What is the OSGi interface for Query Builder?** `com.day.cq.search.QueryBuilder`.
-4.  **How are queries executed internally?** They are translated into XPath.
-5.  **What are the three main execution classes?** `QueryBuilder`, `Query`, and `SearchResult`.
-6.  **How do you define a search path?** `path=/content/mysite`.
-7.  **How do you define node type?** `type=cq:Page`.
-8.  **What is `PredicateGroup`?** A way to group multiple conditions (like using parentheses).
-9.  **What is the default limit of results?** 10.
-10. **How do you get unlimited results?** `p.limit=-1`.
-11. **How do you handle pagination?** Using `p.offset` and `p.limit`.
-12. **How do you sort results?** Using `orderby` (e.g., `orderby=@jcr:content/jcr:lastModified`).
-13. **How to sort in descending order?** `orderby.sort=desc`.
-14. **How to search by property?** `property=jcr:title` and `property.value=Home`.
-15. **How to do full-text search?** `fulltext=mySearchTerm`.
+1.  **What is AEM Query Builder?**<br />Answer : An API for building JCR queries using simple key-value pairs.
+2.  **Where can you test queries in AEM?**<br />Answer : Via the `/libs/cq/search/content/querydebug.html` tool.
+3.  **What is the OSGi interface for Query Builder?**<br />Answer : `com.day.cq.search.QueryBuilder`.
+4.  **How are queries executed internally?**<br />Answer : They are translated into XPath.
+5.  **What are the three main execution classes?**<br />Answer : `QueryBuilder`, `Query`, and `SearchResult`.
+6.  **How do you define a search path?**<br />Answer : `path=/content/mysite`.
+7.  **How do you define node type?**<br />Answer : `type=cq:Page`.
+8.  **What is `PredicateGroup`?**<br />Answer : A way to group multiple conditions (like using parentheses).
+9.  **What is the default limit of results?**<br />Answer : 10.
+10. **How do you get unlimited results?**<br />Answer : `p.limit=-1`.
+11. **How do you handle pagination?**<br />Answer : Using `p.offset` and `p.limit`.
+12. **How do you sort results?**<br />Answer : Using `orderby` (e.g., `orderby=@jcr:content/jcr:lastModified`).
+13. **How to sort in descending order?**<br />Answer : `orderby.sort=desc`.
+14. **How to search by property?**<br />Answer : `property=jcr:title` and `property.value=Home`.
+15. **How to do full-text search?**<br />Answer : `fulltext=mySearchTerm`.
 
 ### Predicates & Logic (16-30)
-16. **How to perform AND logic on properties?** Use `property.1_property`, `property.2_property`.
-17. **How to perform OR logic on properties?** Use `property.1_value`, `property.2_value`.
-18. **How to check for property existence?** `property.operation=exists`.
-19. **How to check if a property is missing?** `property.operation=not`.
-20. **How to do a wildcard search?** `property.operation=like` and `property.value=%test%`.
-21. **How to search by date range?** Use `daterange.property`, `daterange.lowerBound`.
-22. **What is `p.hits=selective`?** Optimizes performance by fetching only specific properties.
-23. **How to find content by a specific user?** Filter by `jcr:content/jcr:lastModifiedBy`.
-24. **What is `relPath`?** Used to search properties on a relative child node.
-25. **How to combine multiple groups with OR?** `1_group.path=...`, `2_group.path=...`, `p.or=true`.
-26. **How to find activated pages?** Search for `jcr:content/cq:lastReplicationAction` = `Activate`.
-27. **What is the `tagid` predicate?** Used for searching nodes tagged with specific AEM tags.
-28. **How to search by Mime Type?** `property=jcr:content/metadata/dc:format`.
-29. **How to use NOT EQUAL?** `property.operation=unequal`.
-30. **What is `MainSearchPredicate`?** A high-level predicate often used for UI-based site searches.
+16. **How to perform AND logic on properties?**<br />Answer : Use `property.1_property`, `property.2_property`.
+17. **How to perform OR logic on properties?**<br />Answer : Use `property.1_value`, `property.2_value`.
+18. **How to check for property existence?**<br />Answer : `property.operation=exists`.
+19. **How to check if a property is missing?**<br />Answer : `property.operation=not`.
+20. **How to do a wildcard search?**<br />Answer : `property.operation=like` and `property.value=%test%`.
+21. **How to search by date range?**<br />Answer : Use `daterange.property`, `daterange.lowerBound`.
+22. **What is `p.hits=selective`?**<br />Answer : Optimizes performance by fetching only specific properties.
+23. **How to find content by a specific user?**<br />Answer : Filter by `jcr:content/jcr:lastModifiedBy`.
+24. **What is `relPath`?**<br />Answer : Used to search properties on a relative child node.
+25. **How to combine multiple groups with OR?**<br />Answer : `1_group.path=...`, `2_group.path=...`, `p.or=true`.
+26. **How to find activated pages?**<br />Answer : Search for `jcr:content/cq:lastReplicationAction` = `Activate`.
+27. **What is the `tagid` predicate?**<br />Answer : Used for searching nodes tagged with specific AEM tags.
+28. **How to search by Mime Type?**<br />Answer : `property=jcr:content/metadata/dc:format`.
+29. **How to use NOT EQUAL?**<br />Answer : `property.operation=unequal`.
+30. **What is `MainSearchPredicate`?**<br />Answer : A high-level predicate often used for UI-based site searches.
 
 ### Java API & Code (31-40)
-31. **How to get total matches count?** `result.getTotalMatches()`.
-32. **How to check query performance?** `result.getExecutionTime()`.
-33. **How to get a Resource from a Hit?** `hit.getResource()`.
-34. **How to get a Path from a Hit?** `hit.getPath()`.
-35. **How to see the generated XPath?** Check `query.getPredicates().toString()` or the debugger.
-36. **How to create a query from a Map?** `queryBuilder.createQuery(PredicateGroup.create(map), session)`.
-37. **Why use try-catch on `hit.getPath()`?** Because it can throw a `RepositoryException`.
-38. **What is the Query Builder JSON Servlet?** `/bin/querybuilder.json`.
-39. **How to adapt Hit to a Page?** `hit.getResource().adaptTo(Page.class)`.
-40. **How to ensure null-safety?** Check if `result` and `resource` are not null before processing.
+31. **How to get total matches count?**<br />Answer : `result.getTotalMatches()`.
+32. **How to check query performance?**<br />Answer : `result.getExecutionTime()`.
+33. **How to get a Resource from a Hit?**<br />Answer : `hit.getResource()`.
+34. **How to get a Path from a Hit?**<br />Answer : `hit.getPath()`.
+35. **How to see the generated XPath?**<br />Answer : Check `query.getPredicates().toString()` or the debugger.
+36. **How to create a query from a Map?**<br />Answer : `queryBuilder.createQuery(PredicateGroup.create(map), session)`.
+37. **Why use try-catch on `hit.getPath()`?**<br />Answer : Because it can throw a `RepositoryException`.
+38. **What is the Query Builder JSON Servlet?**<br />Answer : `/bin/querybuilder.json`.
+39. **How to adapt Hit to a Page?**<br />Answer : `hit.getResource().adaptTo(Page.class)`.
+40. **How to ensure null-safety?**<br />Answer : Check if `result` and `resource` are not null before processing.
 
 ### Performance & Best Practices (41-50)
-41. **Risk of `p.limit=-1`?** Can cause `OutOfMemoryError` on large repositories.
-42. **Why specify `type`?** It allows Oak to use indexes efficiently.
-43. **What is a "Traversal"?** Scanning nodes manually without an index; causes major slowness.
-44. **How to debug slow queries?** Use the **Explain Query** tool in AEM Operations.
-45. **What is the default `p.limit`?** 10.
-46. **What is a Custom `PredicateEvaluator`?** A Java class extending `AbstractPredicateEvaluator` for custom logic.
-47. **Query Builder vs JCR-SQL2?** Query Builder is easier and safer; SQL2 is for complex joins.
-48. **Avoid traversal in Cloud?** Ensure an Oak Index exists for all filtered properties.
-49. **What is `p.guessTotal`?** `p.guessTotal=true` provides a speed boost by not counting every single match.
-50. **How to do a shallow search?** Use `path.flat=true` to only check direct children.
+41. **Risk of `p.limit=-1`?**<br />Answer : Can cause `OutOfMemoryError` on large repositories.
+42. **Why specify `type`?**<br />Answer : It allows Oak to use indexes efficiently.
+43. **What is a "Traversal"?**<br />Answer : Scanning nodes manually without an index; causes major slowness.
+44. **How to debug slow queries?**<br />Answer : Use the **Explain Query** tool in AEM Operations.
+45. **What is the default `p.limit`?**<br />Answer : 10.
+46. **What is a Custom `PredicateEvaluator`?**<br />Answer : A Java class extending `AbstractPredicateEvaluator` for custom logic.
+47. **Query Builder vs JCR-SQL2?**<br />Answer : Query Builder is easier and safer; SQL2 is for complex joins.
+48. **Avoid traversal in Cloud?**<br />Answer : Ensure an Oak Index exists for all filtered properties.
+49. **What is `p.guessTotal`?*<br />Answer :* `p.guessTotal=true` provides a speed boost by not counting every single match.
+50. **How to do a shallow search?**<br />Answer : Use `path.flat=true` to only check direct children.
