@@ -360,13 +360,13 @@ This allows subsequent steps to read this value.
 **97. How do you handle "Large Payload" serialization in Workflow Metadata?**
 <br /> **Answer:** Never serialize. Use a **JSON** library (like Gson or Jackson) to convert the data to a string, and store it in a separate JCR node, passing the path in metadata.
 
-**98. How do you troubleshoot a "Workflow Model not found" error after deployment?**<br />
+**98. How do you troubleshoot a "Workflow Model not found" error after deployment?**
 <br /> **Answer:** Check if the model was deployed to the correct path (`/var/workflow/models`) and ensure that the **Workflow Engine** has been refreshed. Sometimes a bundle restart is required for the engine to recognize new models.
 
-**99. What is the "Fail-Fast" strategy in Workflow Design?**<br />
+**99. What is the "Fail-Fast" strategy in Workflow Design?**
 <br /> **Answer:** Place "Validation Steps" at the very beginning of the model. If the payload is missing a required property, terminate the workflow immediately rather than letting it fail at the very last step (e.g., Activation).
 
-**100. If you had to redesign AEM's Workflow system for extreme scale, what would you change?**<br />
+**100. If you had to redesign AEM's Workflow system for extreme scale, what would you change?**
 <br /> **Answer:** (Architectural Answer): I would move the state management from the **JCR** to a **distributed NoSQL database** (like MongoDB or DynamoDB) and use a **Message Broker** (like Kafka) instead of the internal Sling Eventing. This would decouple the "Trigger" from the "Execution" and allow the workers to scale independently of the AEM Pods.
 
 
