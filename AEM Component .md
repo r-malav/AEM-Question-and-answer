@@ -135,6 +135,148 @@ This guide covers the core concepts of **AEM Components**, **Dialogs**, **Design
 
 ---
 
+This is a critical topic for AEM Frontend and Component development. These listeners control the **User Experience (UX)** of the author. Using `REFRESH_SELF` instead of `REFRESH_PAGE` makes the authoring interface much faster.
+
+---
+
+### **AEM `cq:editConfig` Listeners Reference Guide**
+
+#### **1. Core Listener Actions**
+These properties are defined under the `cq:listeners` node within a `cq:editConfig`.
+
+| Listener Attribute | Action Command | Description |
+| :--- | :--- | :--- |
+| **`afteredit`** | `REFRESH_SELF` | Refreshes only the edited component. |
+| **`afterinsert`** | `REFRESH_INSERTED` | Refreshes only the newly added component. |
+| **`afterdelete`** | `REFRESH_DELETED` | Cleans up the UI after a component is removed. |
+| **`aftermove`** | `REFRESH_PARENT` | Refreshes the container after a component is moved. |
+
+---
+
+#### **2. Best Practices: Scenario Mapping**
+Choosing the right refresh strategy is vital for performance.
+
+| Scenario | Recommended Action | Reason |
+| :--- | :--- | :--- |
+| **Simple Content Update** (Text, Image) | `REFRESH_SELF` | Quickest. Only the modified HTML is re-rendered. |
+| **Adding a New Component** | `REFRESH_INSERTED` | Avoids reloading the whole page; shows the new component immediately. |
+| **Deleting a Component** | `REFRESH_DELETED` | Removes the "Ghost" overlay of the deleted item. |
+| **Layout / Column Changes** | `REFRESH_PARENT` | If adding/moving an item changes the width of others in the same row. |
+| **Global Changes** (Header, Menu) | `REFRESH_PAGE` | Use only if the change affects other components on the page. |
+
+---
+
+#### **3. Implementation Example (`_cq_editConfig.xml`)**
+This is how the configuration looks in your project code:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:EditConfig">
+    <cq:listeners
+        jcr:primaryType="cq:EditListenersConfig"
+        afteredit="REFRESH_SELF"
+        afterinsert="REFRESH_INSERTED"
+        afterdelete="REFRESH_DELETED"
+        aftermove="REFRESH_PARENT"/>
+</jcr:root>
+```
+
+---
+
+### **4. Interview Q&A: `cq:editConfig` Listeners**
+
+**Q1: What is the difference between `REFRESH_SELF` and `REFRESH_PAGE`?**
+*   **Ans:** `REFRESH_SELF` uses AJAX to reload only the component's specific HTML area. `REFRESH_PAGE` triggers a full browser reload. Always prefer `REFRESH_SELF` for better performance.
+
+**Q2: When is `REFRESH_PAGE` absolutely necessary?**
+*   **Ans:** When a component change influences the behavior or appearance of another component (e.g., a "Search Results" component changing when a "Search Filter" component is edited).
+
+**Q3: What happens if you don't define `afterdelete`?**
+*   **Ans:** Sometimes the component's authoring overlay (the blue box) remains visible even though the content is gone, leading to a confusing UI.
+
+**Q4: Can you write custom JavaScript in these listeners?**
+*   **Ans:** Yes. Instead of the built-in REFRESH constants, you can provide a JavaScript function name that is defined in a clientlib, though this is less common in modern AEM.
+
+**Q5: What is the `aftermove` listener used for?**
+*   **Ans:** It is used primarily in containers (like parsys or layout containers). If you move a component from one column to another, the parent container needs to refresh to recalculate the layout.
+
+**Q6: Where is the `cq:editConfig` node located?**
+*   **Ans:** It is a child node of the component node (e.g., `/apps/myproject/components/content/hero/cq:editConfig`).
+
+---
+
+
+---
+These four properties are the foundation of the **Sling Resource Merger** and **Component Inheritance**. They allow developers to customize AEM without touching the original code in `/libs`.
+
+---
+
+### **AEM Resource Merger & Inheritance Reference**
+
+#### **1. 🧩 `sling:resourceSuperType` (Inheritance)**
+This property enables the **Proxy Pattern**. It tells Sling that if a script (like HTL or CSS) or a property is missing in the current component, it should look for it in the "SuperType" path.
+*   **Usage:** Used to extend Core Components or create base components.
+*   **Example:** 
+    *   Path: `/apps/myproject/components/button`
+    *   `sling:resourceSuperType` = `core/wcm/components/button/v2/button`
+*   **Result:** Your custom button inherits all logic from the Adobe Core Button.
+
+#### **2. ❌ `sling:hideResource` (Exclude Node)**
+This is used when you want to completely remove a node that exists in the parent or in `/libs`.
+*   **Usage:** Common when overriding a dialog from `/libs` and you want to remove an entire tab or a specific field.
+*   **Example:** You want to remove the "Advanced" tab from a core component dialog.
+*   **Action:** Create the same node structure in `/apps` and set `sling:hideResource="{Boolean}true"`.
+
+#### **3. 🚫 `sling:hideChildren` (Exclude Multiple Children)**
+Similar to `hideResource`, but applied to a parent node to suppress specific child nodes.
+*   **Usage:** Used when you want to keep the parent node but hide specific sub-elements.
+*   **Format:** Can be a single String `*` (hide all) or a String Array `["node1", "node2"]`.
+*   **Example:** `sling:hideChildren = ["image", "link"]` will hide those two fields in the merged dialog.
+
+#### **4. 🔄 `sling:orderBefore` (Reordering)**
+In a merged resource (like a Dialog), nodes are merged alphabetically or by their original order. This property allows you to inject your custom node into a specific position.
+*   **Usage:** Moving a custom field to the top of a dialog or between two existing fields.
+*   **Example:** You have a field `myField`. You want it to appear before the `description` field.
+*   **Action:** Set `sling:orderBefore = "description"` on your `myField` node.
+
+---
+
+### **Interview Questions: Sling Resource Merger**
+
+**Q1: What is the Sling Resource Merger?**
+*   **Ans:** It is a service that provides a merged view of resources across the search paths (usually `/apps` and `/libs`). It allows developers to create "overlays" where `/apps` overrides `/libs`.
+
+**Q2: Difference between `sling:resourceType` and `sling:resourceSuperType`?**
+*   **Ans:** `sling:resourceType` defines what the resource **is** (the specific component). `sling:resourceSuperType` defines what the resource **inherits from** (the parent component).
+
+**Q3: How do you hide an entire tab in a Core Component dialog?**
+*   **Ans:** Create the exact path to that tab node in `/apps` and add the property `sling:hideResource = true`.
+
+**Q4: Can `sling:resourceSuperType` point to multiple paths?**
+*   **Ans:** No. It only supports a single path (Single Inheritance).
+
+**Q5: How do you make a field the very first item in a dialog?**
+*   **Ans:** Use `sling:orderBefore`. To make it first, set it to the name of the current first node. If you want to be absolute, you can sometimes use a non-existent name or manage it via the parent's `sling:hideChildren` + re-adding.
+
+**Q6: What happens if `sling:hideResource` is set on a node in `/libs`?**
+*   **Ans:** It will have no effect because `/libs` is the bottom of the search path. These properties are meant to be used in `/apps` to override `/libs`.
+
+**Q7: Is `sling:orderBefore` used in HTL?**
+*   **Ans:** No. It is specifically used by the Sling Resource Merger to order nodes during the resolution of a resource (mostly used for Dialogs and OSGi configs).
+
+---
+
+### **Summary Table for README.md**
+
+| Property | Purpose | Target |
+| :--- | :--- | :--- |
+| `sling:resourceSuperType` | Inherit logic/styles | Component Node |
+| `sling:hideResource` | Delete/Suppress a node | Any node being merged |
+| `sling:hideChildren` | Suppress specific children | Parent node |
+| `sling:orderBefore` | Change UI/Node order | Field/Node to be moved |
+
+---
 ### **Summary Table for README.md**
 
 | Feature | Node Name | Purpose | Data Storage |
