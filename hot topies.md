@@ -114,3 +114,101 @@ Bundles are the building blocks of AEM logic.
 | `data-sly-template` | Defines a reusable template block. |
 | `data-sly-call` | Invokes/calls a defined template. |
 | `data-sly-resource` | Includes a specific resource in the component. |
+
+
+To make your AEM knowledge base complete, here are the remaining critical topics often asked in interviews. You should add these sections to your `README.md`.
+
+---
+
+### **11. Client-Side Libraries (Clientlibs)**
+Clientlibs are used to manage CSS and JavaScript files in AEM, allowing for minification, concatenation, and dependency management.
+
+| Feature | Description |
+| :--- | :--- |
+| **Categories** | Unique name assigned to a clientlib to identify it. |
+| **Dependencies** | Other clientlibs that must be loaded *before* this one. |
+| **Embeds** | Merges other clientlibs into this one (minimizes HTTP requests). |
+| **AllowProxy** | Boolean. If true, allows serving clientlibs from `/apps` via `/etc.clientlibs` (security best practice). |
+| **Minification** | Compressing code to reduce file size. |
+
+---
+
+### **12. Multi-Site Manager (MSM) & Blueprints**
+Used to manage multiple websites with shared content (e.g., different languages or regions).
+
+*   **Blueprint:** A source site used as a template for other sites.
+*   **Live Copy:** A site created from a blueprint that maintains a relationship with the source.
+*   **Rollout Configuration:** Rules that define when and how content changes are pushed from Blueprint to Live Copy.
+*   **Live Action:** Specific actions (like update, delete) during a rollout.
+*   **Inheritance:** The ability for a Live Copy to receive updates; can be "cancelled" or "suspended" for specific components.
+
+---
+
+### **13. AEM Workflows**
+Workflows automate business processes (e.g., content approval, asset processing).
+
+*   **Workflow Model:** The visual representation of the process (steps).
+*   **Workflow Launcher:** Automatically triggers a workflow based on JCR events (e.g., node created).
+*   **Steps:**
+    *   *Participant Step:* Requires a human to take action.
+    *   *Process Step:* Executes a Java class (automated logic).
+    *   *Container Step:* Runs another workflow inside the current one.
+*   **Workflow Payload:** The specific resource or page being processed.
+
+---
+
+### **14. Oak Indexing & Querying**
+Searching for content in AEM using JCR-SQL2 or XPath.
+
+*   **Property Index:** Best for exact matches of a single property (e.g., `jcr:title`).
+*   **Lucene Index:** Best for full-text search and complex queries. Required for AEMaaCS.
+*   **Index Definition:** Stored under `/oak:index`.
+*   **Query Explainer:** A tool in the Web Console to check if a query is using an index or doing a "full repository scan" (which kills performance).
+
+---
+
+### **15. Sling Resource Resolution**
+The logic Sling uses to find the script to render a URL.
+
+1.  **URL Decomposition:** Extracts the path, selectors, extension, and suffix.
+2.  **Resource Identification:** Maps the path to a JCR node.
+3.  **Script Resolution:** Looks for a script based on `sling:resourceType`.
+    *   Order of search: `/apps` -> `/libs`.
+    *   Matches selectors, extensions, and methods (GET/POST).
+
+---
+
+### **16. The Style System**
+Allows authors to apply different visual variations to a component without creating new components.
+
+*   **Mechanism:** Authors select a style in the component toolbar.
+*   **Implementation:** A CSS class is added to the component's outer wrapper.
+*   **Policy:** Defined in the Editable Template's Policy (links a "Style Name" to a "CSS Class").
+
+---
+
+### **17. Asset Management (DAM)**
+*   **Renditions:** Different sizes/formats of an image (e.g., thumbnail, web-optimized).
+*   **Metadata:** Information about an asset (stored in `jcr:content/metadata`).
+*   **Asset Compute Service (AEMaaCS):** Offloads asset processing (like creating renditions) to a cloud-native service instead of the AEM instance itself.
+
+---
+
+### **18. User Management & Security**
+*   **ACL (Access Control List):** Defines permissions (Read, Modify, Create, Delete, Replicate).
+*   **CUG (Closed User Group):** Restricts access to specific pages to a specific group of logged-in users.
+*   **Service User:** A system user with specific permissions used by backend code (servlets/services) to access the JCR. Use `ResourceResolverFactory.getServiceResourceResolver()`.
+
+---
+
+### **19. AEM Headless (GraphQL)**
+*   **Content Fragment Models:** Defines the schema (like a database table).
+*   **Persisted Queries:** GraphQL queries stored on the AEM server for better performance and caching via Dispatcher/CDN.
+*   **Endpoint:** The URL where external apps fetch JSON data via GraphQL.
+
+---
+
+### **20. Replication (Distributor Service)**
+*   **Replication Agent (Classic):** Pushes content from Author to Publish (Legacy).
+*   **Sling Content Distribution (AEMaaCS):** A more robust, pipeline-based approach for moving content between instances in the cloud.
+*   **Reverse Replication:** Moving user-generated content (like comments) from Publish back to Author (Rarely used now; replaced by shared data stores).
