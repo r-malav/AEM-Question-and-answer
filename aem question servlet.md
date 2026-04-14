@@ -43,7 +43,20 @@ public class ExampleServlet extends SlingSafeMethodsServlet {
 public class ExampleServlet extends SlingSafeMethodsServlet {
 }
 ```
+```java
 
+@SlingServletResourceTypes(
+        resourceTypes = {
+                "myproject/components/page",
+                "myproject/components/article",
+                "myproject/components/blog"
+        },
+        methods = "GET",
+        extensions = "json"
+)
+public class ExampleServlet extends SlingSafeMethodsServlet {
+}
+```
 ### 3. Difference: SlingSafeMethodsServlet vs SlingAllMethodsServlet
 
 * Safe → GET only
