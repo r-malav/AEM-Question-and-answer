@@ -1,284 +1,116 @@
-Node vs Resource — Interview Points
-A Node is the actual content stored in JCR, while a Resource is Sling’s view/representation of that content (or any other data) used for rendering and models.
-Node is a JCR-level object stored in the content repository (CRX).
-Resource is a Sling abstraction representing content for rendering.
-Node uses JCR API (javax.jcr.Node), Resource uses Sling API (org.apache.sling.api.resource.Resource).
-Node manages properties using JCR Property, Resource exposes properties using ValueMap.
-ResourceResolver resolves URL → Resource; Node is not URL-driven.
-Node exists only if stored in JCR; Resource can represent non-JCR data (synthetic, external).
-Resource can be adapted to Node when low-level JCR operations are needed.
-A Node is a JCR repository entity stored in CRX.
- A Resource is Sling’s representation of content for rendering.
-
-
-Node interacts with JCR API (javax.jcr.Node).
-
- Resource interacts with Sling API (org.apache.sling.api.resource.Resource).
-
-
-Node stores content in a hierarchical structure in JCR.
- Resource represents content in a REST-style structure used by Sling.
-
-
-Node properties are accessed as JCR Property objects.
- Resource properties are accessed through a ValueMap.
-
-
-Node is strictly JCR-backed.
- Resource can represent external/synthetic sources (not only JCR).
-
-
-Node may throw exceptions if a path doesn’t exist.
- Resource can return a non-existing Resource object instead of failing.
-
-
-Node is used for low-level CRUD operations on repository content.
- Resource is used for component rendering and Sling Models.
-
-
-
-
-
-
-Feature
-Node
-Resource
-Definition
-A JCR (Java Content Repository) entity stored in CRX.
-Sling abstraction representing content in a RESTful way.
-API
-Uses JCR API (javax.jcr.Node)
-Uses Sling API (org.apache.sling.api.resource.Resource)
-Data Access
-Structured hierarchical content storage in JCR.
-Accesses content + type info via ResourceResolver.
-Properties
-Uses Property objects under the node.
-Uses ValueMap (resource.getValueMap()).
-Binding to Sling
-Not directly tied to Sling; it depends on JCR implementation.
-URL resolution → Resource via Sling ResourceResolver.
-Flexibility
-Only JCR-backed content.
-Can represent any data source (filesystem, DB, synthetic).
-Null Handling
-If the path doesn’t exist, → throws an error.
-Can return a non-existing Resource wrapper.
-Used In
-Low-level repository CRUD operations in JCR.
-Rendering, Sling Models, components, and request processing.
-
-
-Immutable vs Mutable Content Strategy
-Immutable code → /apps, /conf, /oak:index
-Mutable content → /content, /etc, user-generated data
-
-Feature
-Static Templates
-Editable Templates
-Creation Location
-/apps/<project>/templates
-Managed via Template Editor (/conf/<project>/settings/wcm/templates)
-Who Controls Structure?
-Developers only
-Authors + Developers
-Page Structure
-Hard-coded in component hierarchy
-Defined using Structure and Initial Content layers
-Editable Areas
-Limited / fixed parsys
-Responsive Layout + Dynamic policies for components
-Design Configurations
-Stored in /etc/designs (deprecated)
-Content Policies via Style System
-Component Permissions
-Code-driven
-Configurable without code deployment
-Flexibility
-Low
-Very High
-Recommended for
-Legacy projects / strict fixed layouts
-Modern AEM development (Adobe best practice)
-AEM Version
-Classic UI era
-Touch UI (AEM 6.2+)
-
-
-
-
-7. Role of Dispatcher in CQ5?
-In CQ5, a Dispatcher is responsible for caching and serving the static content of a website. It helps reduce the load on the authoring environment and improves website performance by serving cached content to end-users.
-
-
-
-
-@Inject vs @ValueMapValue
-
-
-@Inject is a generic Sling Models injection annotation that can inject any adaptable object like services, resources, requests, or other models.
-@ValueMapValue is specifically used to inject resource properties from the JCR ValueMap. It ensures safe type conversion and clearer intention for property injection.
-
-
-@ValueMapValue
-Safe conversion & avoids ClassCastException.
-
-
-@Inject
-Resource
-ResourceResolver
-OSGi services
-SlingHttpServletRequest
-Other Sling Models (child/adaptable)
-
-
-What are AEM Bundles?
-In AEM, Bundles are the modular building blocks of the OSGi framework.
- A bundle is just a JAR file with special metadata inside MANIFEST.MF that allows OSGi to manage it.
-AEM Bundles are OSGi-based modular JAR files that contain services and business logic. They are dynamically installable and manageable by the OSGi framework (Apache Felix), supporting hot deployment and versioning.
-OSGi allows bundles to be:
-1. Installed 2.Started 3. Resolved 4. Active 5.Stopped 6.Uninstalled
- without restarting the server → Hot deployment
- One-Liner for Interview
-Path-based servlets are tied to a fixed URL path, mainly useful for utilities/APIs, while resource-based servlets are tied to resourceTypes and are preferred in AEM for component-driven, reusable logic.
-Feature
-Path-Based Servlet
-Resource-Based Servlet
-How it is triggered
-Based on exact JCR or URL path
-Based on Resource Type of node/component
-Annotation Used
-@SlingServletPaths or /system/console/configMgr -> Sling Servlet Paths
-@SlingServletResourceTypes
-Binding
-URL → Servlet
-URL → Resource → Servlet
-Flexibility
-Low — tied to one path
-High — reusable across many components/pages
-Used For
-Utility endpoints, custom APIs, specific paths
-Page/component rendering, logic tied to content structure
-Dependency on Content Structure
-No — just path
-Yes — must match a resource type in JCR
-Common Example
-/bin/myapp/data
-ResourceType: myapp/components/content/hero
-Mapping Type
-Mapped using SlingServletPaths
-Mapped using SlingServletResourceTypes
-URL Dependency
-Works only for that specific path
-Works for any resource using that resourceType
-Reusability
-❌ Low (tightly coupled to URL path)
-✔ High (used across components/pages with same resourceType)
-Use Case
-Admin/utility endpoints like /bin/...
-Component rendering, content-driven servlets
-Impact of Content Move
-URL change → servlet breaks
-Still works when content path changes
-Security & Flexibility
-Exposed endpoint → must secure
-Less exposure → more secure by default
-Best Suitable For
-APIs, backend jobs, fixed service URLs
-Extending component behavior dynamically
-
-
-
-
-AEMaaCS and onprims
-
-
-AEMaaCS is Adobe-managed cloud hosting with auto-scaling, continuous upgrades, stateless architecture, and built-in Cloud Manager CI/CD. On-Prem is fully customer-managed with manual deployments, scaling, hardware management, and version upgrades.
-
-
-
-Feature
-AEMaaCS (Cloud Service)
-AEM On-Premise
-1️⃣ Deployment Model
-Fully managed by Adobe on cloud
-Installed & managed on customer servers
-2️⃣ Scaling
-Auto-scaling (author & publish scale automatically based on load)
-Manual scaling — upgrade hardware, add nodes
-3️⃣ Release & Updates
-Continuous updates by Adobe (zero downtime releases)
-Customer controls updates; often requires downtime
-4️⃣ DevOps & Pipeline
-Adobe Cloud Manager for CI/CD, automated quality gates
-Custom DevOps pipelines (Jenkins/Bamboo etc.), manual monitoring
-5️⃣ Architecture
-Stateless publish, immutable infrastructure, CDN + Edge Delivery
-State-based architecture, needs manual dispatcher/CDN setup
-
-
-When to Choose AEM On-Prem?
-Choose On-Prem if:
-Highly secured environments where data cannot leave customer network (Defense, BFSI)
-Need complete infrastructure control (low-level configs, database tuning)
-Heavy custom integrations not supported in Cloud
-Cost-optimization for small-scale deployments
-Offline network environments required
-
- When to Choose AEMaaCS (Cloud)?
-Choose Cloud when:
-You want auto-scaling + zero downtime upgrades
-Minimum DevOps — Adobe manages infrastructure
-Need rapid deployments and fast provisioning of environments
-Large multi-site multilingual platform
-Performance monitoring and quality gates built-in
-
-
-Content Fragment vs Experience Fragment
-
-Feature
-Content Fragment
-Experience Fragment
-Content or Layout?
-Content-only
-Layout + Components
-Channels
-Multi-channel/headless
-Web-focused
-Use case
-Structured data reuse
-Page experience reuse
-API delivery
-GraphQL supported
-Not for headless
-
-
-
-
-What is Selector and Extension in AEM URL?
-URL: /page.selector1.selector2.html
-
-Part
-Use
-Selector
-Additional processing (filtering, config)
-Extension
-Renderer type (html, json, xml)
-
-
-
-Attribute
-Purpose
-Usage
-data-sly-use
-Access Java/Sling Models in HTL
-${model.property}
-data-sly-template
-Define reusable HTL template
-<div data-sly-template.name="${param}">...</div>
-data-sly-call
-Invoke template defined above
-<div data-sly-call.name="${param: value}"></div>
-
-
-
+# AEM (Adobe Experience Manager) Interview Reference Guide
+
+A comprehensive guide covering core AEM concepts including JCR, Sling, OSGi, and modern AEM Cloud Service features.
+
+---
+
+## 📑 Table of Contents
+1. [Node vs Resource](#1-node-vs-resource)
+2. [Content Strategy (Immutable vs Mutable)](#2-content-strategy)
+3. [Templates (Static vs Editable)](#3-templates-static-vs-editable)
+4. [Role of Dispatcher](#4-role-of-dispatcher)
+5. [Sling Models: @Inject vs @ValueMapValue](#5-sling-models-inject-vs-valuemapvalue)
+6. [AEM OSGi Bundles](#6-aem-osgi-bundles)
+7. [Servlets: Path-based vs Resource-based](#7-servlets-path-based-vs-resource-based)
+8. [AEMaaCS vs On-Premise](#8-aemaacs-vs-on-premise)
+9. [Content Fragments vs Experience Fragments](#9-content-fragments-vs-experience-fragments)
+10. [URL Structure & HTL Attributes](#10-url-structure--htl-attributes)
+
+---
+
+## 1. Node vs Resource
+| Feature | Node | Resource |
+| :--- | :--- | :--- |
+| **Definition** | A JCR entity stored in CRX. | Sling abstraction representing content in a RESTful way. |
+| **API** | Uses JCR API (`javax.jcr.Node`) | Uses Sling API (`org.apache.sling.api.resource.Resource`) |
+| **Properties** | Uses Property objects under the node. | Uses ValueMap (`resource.getValueMap()`). |
+| **Binding** | Not directly tied to Sling. | URL resolution → Resource via ResourceResolver. |
+| **Flexibility** | Only JCR-backed content. | Can represent any data source (DB, synthetic, etc.). |
+| **Null Handling** | Throws error if path doesn't exist. | Returns a non-existing Resource wrapper. |
+| **Used In** | Low-level JCR CRUD operations. | Rendering, Sling Models, and request processing. |
+
+---
+
+## 2. Content Strategy
+*   **Immutable Code:** Content that cannot be changed at runtime. Located in `/apps`, `/conf`, and `/oak:index`.
+*   **Mutable Content:** Content that can be modified by authors or the system. Located in `/content`, `/etc`, and user-generated data.
+
+---
+
+## 3. Templates: Static vs Editable
+| Feature | Static Templates | Editable Templates |
+| :--- | :--- | :--- |
+| **Creation Location** | `/apps/<project>/templates` | `/conf/<project>/settings/wcm/templates` |
+| **Control** | Developers only | Authors + Developers |
+| **Structure** | Hard-coded in component hierarchy | Defined via Structure and Initial Content layers |
+| **Design** | Stored in `/etc/designs` (Deprecated) | Content Policies via Style System |
+| **AEM Version** | Classic UI era | Touch UI (AEM 6.2+) |
+
+---
+
+## 4. Role of Dispatcher
+The **Dispatcher** is AEM's caching and load-balancing tool. 
+*   **Caching:** Serves static content from a web server to reduce load on the AEM Publish instance.
+*   **Load Balancing:** Distributes user requests across multiple Publish instances.
+*   **Security:** Acts as a filter to protect the AEM environment.
+
+---
+
+## 5. Sling Models: @Inject vs @ValueMapValue
+*   **`@Inject`**: A generic annotation that can inject adaptable objects like services, resources, requests, or other models. It is slower as it tries all injectors.
+*   **`@ValueMapValue`**: Specifically for resource properties from the JCR. It ensures safe type conversion and is the preferred practice for property injection.
+
+---
+
+## 6. AEM OSGi Bundles
+Bundles are the building blocks of AEM logic.
+*   **Definition:** Modular JAR files with `MANIFEST.MF` metadata managed by **Apache Felix**.
+*   **Lifecycle:** `Installed` → `Resolved` → `Starting` → `Active` → `Stopping` → `Uninstalled`.
+*   **Benefit:** Supports **Hot Deployment** (updating code without restarting the server).
+
+---
+
+## 7. Servlets: Path-based vs Resource-based
+| Feature | Path-Based Servlet | Resource-Based Servlet |
+| :--- | :--- | :--- |
+| **Trigger** | Fixed URL path (e.g., `/bin/myapp`) | Resource Type of the node/component |
+| **Annotation** | `@SlingServletPaths` | `@SlingServletResourceTypes` |
+| **Security** | Requires manual configuration | Inherits JCR Access Control (ACLs) |
+| **Flexibility** | Low (tied to one path) | High (works for any node with the resourceType) |
+| **Use Case** | Admin/Utility endpoints | Component rendering logic |
+
+---
+
+## 8. AEMaaCS vs On-Premise
+| Feature | AEMaaCS (Cloud Service) | AEM On-Premise |
+| :--- | :--- | :--- |
+| **Deployment** | Managed by Adobe | Managed by Customer |
+| **Scaling** | Auto-scaling (Author & Publish) | Manual (Hardware/Node upgrades) |
+| **Updates** | Continuous, automatic updates | Manual upgrades; often involves downtime |
+| **CI/CD** | Cloud Manager only | Custom (Jenkins, Bamboo, etc.) |
+| **Infrastructure** | Stateless / Immutable | State-based |
+
+---
+
+## 9. Content Fragments vs Experience Fragments
+| Feature | Content Fragment (CF) | Experience Fragment (XF) |
+| :--- | :--- | :--- |
+| **Focus** | Structured data / Content-only | Layout + Components (Design) |
+| **Channels** | Multi-channel (Headless/GraphQL) | Web-focused (HTML/Web Page) |
+| **Reuse** | Used for structured content reuse | Used for design and experience reuse |
+
+---
+
+## 10. URL Structure & HTL Attributes
+### URL Breakdown
+**Example:** `/content/page.selector1.json`
+*   **Selector:** `selector1` — Used for additional processing/filtering.
+*   **Extension:** `json` — Defines the renderer type.
+
+### Common HTL Attributes
+| Attribute | Purpose |
+| :--- | :--- |
+| `data-sly-use` | Initializes a Java class or Sling Model. |
+| `data-sly-template` | Defines a reusable template block. |
+| `data-sly-call` | Invokes/calls a defined template. |
+| `data-sly-resource` | Includes a specific resource in the component. |
