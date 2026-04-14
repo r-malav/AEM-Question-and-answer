@@ -191,3 +191,182 @@ public class MySearchServiceImpl implements MySearchService {
  `property=jcr:content/jcr:createdBy` and `property.value=admin`.
 50. **How to implement facets in QueryBuilder?**<br />Answer :
  Add `p.facets=true` and `property=jcr:content/cq:tags`. Use `result.getFacets()` in Java to extract the tagged counts.
+
+
+
+---
+This content is formatted as a professional **README.md** file, suitable for a GitHub repository or technical documentation.
+
+---
+
+# AEM Query Builder Guide
+
+A comprehensive guide to understanding, implementing, and mastering the **Adobe Experience Manager (AEM) Query Builder API**.
+
+## Table of Contents
+1. [Detailed Explanation](#detailed-explanation)
+2. [Key Components](#key-components)
+3. [Implementation (Java API)](#implementation-java-api)
+4. [The Query Builder Debugger](#the-query-builder-debugger)
+5. [50 Interview Questions & Answers](#50-interview-questions--answers)
+
+---
+
+## Detailed Explanation
+
+The **AEM Query Builder** is a powerful API and framework used to search the Java Content Repository (JCR). It provides an easy-to-use, map-based syntax to build complex search queries, which it then translates into optimized **XPath** or **JCR-SQL2** queries behind the scenes.
+
+### Why use Query Builder?
+*   **Simplicity:** Writing raw JCR-SQL2 can be complex and error-prone. Query Builder uses simple key-value pairs.
+*   **Abstraction:** You don't need to know the exact database/JCR syntax.
+*   **Out-of-the-box Features:** It handles pagination, sorting, and hit highlighting automatically.
+*   **Security:** It respects JCR Access Control Lists (ACLs) automatically.
+*   **Extensibility:** You can write custom `PredicateEvaluators` to create custom search logic.
+
+---
+
+## Key Components
+
+| Component | Description |
+| :--- | :--- |
+| **QueryBuilder** | The main OSGi service used to create queries. |
+| **Query** | Represents the search executable. |
+| **SearchResult** | Contains hits (results), pagination info, and execution metrics. |
+| **Predicates** | Individual search criteria (e.g., `path`, `type`, `property`). |
+| **Hits** | The individual nodes/resources found by the query. |
+
+---
+
+## Implementation (Java API)
+
+Below is a standard implementation of a search service using the Query Builder API in AEM.
+
+```java
+package com.mysite.core.services;
+
+import com.day.cq.search.PredicateGroup;
+import com.day.cq.search.Query;
+import com.day.cq.search.QueryBuilder;
+import com.day.cq.search.result.Hit;
+import com.day.cq.search.result.SearchResult;
+import org.apache.sling.api.resource.Resource;
+import org.apache.sling.api.resource.ResourceResolver;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+import javax.jcr.Session;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Component(service = MySearchService.class)
+public class MySearchService {
+
+    @Reference
+    private QueryBuilder queryBuilder;
+
+    /**
+     * Executes a search for pages under a specific path with a specific resource type.
+     */
+    public void executeSearch(ResourceResolver resourceResolver) {
+        // 1. Create a map of predicates
+        Map<String, String> queryMap = new HashMap<>();
+        queryMap.put("path", "/content/mysite/en");
+        queryMap.put("type", "cq:Page");
+        queryMap.put("property", "jcr:content/sling:resourceType");
+        queryMap.put("property.value", "mysite/components/page");
+        queryMap.put("p.limit", "10"); 
+        queryMap.put("p.offset", "0"); 
+
+        // 2. Get JCR Session from ResourceResolver
+        Session session = resourceResolver.adaptTo(Session.class);
+
+        // 3. Create the query instance
+        Query query = queryBuilder.createQuery(PredicateGroup.create(queryMap), session);
+
+        // 4. Get the search result
+        SearchResult result = query.getResult();
+
+        // 5. Iterate through the results
+        List<Hit> hits = result.getHits();
+        for (Hit hit : hits) {
+            try {
+                String path = hit.getPath();
+                Resource resource = hit.getResource();
+                System.out.println("Found resource at: " + path);
+            } catch (Exception e) {
+                // Handle potential RepositoryException
+            }
+        }
+    }
+}
+```
+
+---
+
+## The Query Builder Debugger
+AEM provides a built-in UI tool to test and debug your queries without writing code.
+*   **URL:** `http://localhost:4502/libs/cq/search/content/querydebug.html`
+*   **Usage:** Enter your predicates as key-value pairs to see results and the generated XPath.
+
+---
+
+## 50 Interview Questions & Answers
+
+### Basics (1-15)
+1.  **What is AEM Query Builder?** An API for building JCR queries using simple key-value pairs.
+2.  **Where can you test queries in AEM?** Via the `/libs/cq/search/content/querydebug.html` tool.
+3.  **What is the OSGi interface for Query Builder?** `com.day.cq.search.QueryBuilder`.
+4.  **How are queries executed internally?** They are translated into XPath.
+5.  **What are the three main execution classes?** `QueryBuilder`, `Query`, and `SearchResult`.
+6.  **How do you define a search path?** `path=/content/mysite`.
+7.  **How do you define node type?** `type=cq:Page`.
+8.  **What is `PredicateGroup`?** A way to group multiple conditions (like using parentheses).
+9.  **What is the default limit of results?** 10.
+10. **How do you get unlimited results?** `p.limit=-1`.
+11. **How do you handle pagination?** Using `p.offset` and `p.limit`.
+12. **How do you sort results?** Using `orderby` (e.g., `orderby=@jcr:content/jcr:lastModified`).
+13. **How to sort in descending order?** `orderby.sort=desc`.
+14. **How to search by property?** `property=jcr:title` and `property.value=Home`.
+15. **How to do full-text search?** `fulltext=mySearchTerm`.
+
+### Predicates & Logic (16-30)
+16. **How to perform AND logic on properties?** Use `property.1_property`, `property.2_property`.
+17. **How to perform OR logic on properties?** Use `property.1_value`, `property.2_value`.
+18. **How to check for property existence?** `property.operation=exists`.
+19. **How to check if a property is missing?** `property.operation=not`.
+20. **How to do a wildcard search?** `property.operation=like` and `property.value=%test%`.
+21. **How to search by date range?** Use `daterange.property`, `daterange.lowerBound`.
+22. **What is `p.hits=selective`?** Optimizes performance by fetching only specific properties.
+23. **How to find content by a specific user?** Filter by `jcr:content/jcr:lastModifiedBy`.
+24. **What is `relPath`?** Used to search properties on a relative child node.
+25. **How to combine multiple groups with OR?** `1_group.path=...`, `2_group.path=...`, `p.or=true`.
+26. **How to find activated pages?** Search for `jcr:content/cq:lastReplicationAction` = `Activate`.
+27. **What is the `tagid` predicate?** Used for searching nodes tagged with specific AEM tags.
+28. **How to search by Mime Type?** `property=jcr:content/metadata/dc:format`.
+29. **How to use NOT EQUAL?** `property.operation=unequal`.
+30. **What is `MainSearchPredicate`?** A high-level predicate often used for UI-based site searches.
+
+### Java API & Code (31-40)
+31. **How to get total matches count?** `result.getTotalMatches()`.
+32. **How to check query performance?** `result.getExecutionTime()`.
+33. **How to get a Resource from a Hit?** `hit.getResource()`.
+34. **How to get a Path from a Hit?** `hit.getPath()`.
+35. **How to see the generated XPath?** Check `query.getPredicates().toString()` or the debugger.
+36. **How to create a query from a Map?** `queryBuilder.createQuery(PredicateGroup.create(map), session)`.
+37. **Why use try-catch on `hit.getPath()`?** Because it can throw a `RepositoryException`.
+38. **What is the Query Builder JSON Servlet?** `/bin/querybuilder.json`.
+39. **How to adapt Hit to a Page?** `hit.getResource().adaptTo(Page.class)`.
+40. **How to ensure null-safety?** Check if `result` and `resource` are not null before processing.
+
+### Performance & Best Practices (41-50)
+41. **Risk of `p.limit=-1`?** Can cause `OutOfMemoryError` on large repositories.
+42. **Why specify `type`?** It allows Oak to use indexes efficiently.
+43. **What is a "Traversal"?** Scanning nodes manually without an index; causes major slowness.
+44. **How to debug slow queries?** Use the **Explain Query** tool in AEM Operations.
+45. **What is the default `p.limit`?** 10.
+46. **What is a Custom `PredicateEvaluator`?** A Java class extending `AbstractPredicateEvaluator` for custom logic.
+47. **Query Builder vs JCR-SQL2?** Query Builder is easier and safer; SQL2 is for complex joins.
+48. **Avoid traversal in Cloud?** Ensure an Oak Index exists for all filtered properties.
+49. **What is `p.guessTotal`?** `p.guessTotal=true` provides a speed boost by not counting every single match.
+50. **How to do a shallow search?** Use `path.flat=true` to only check direct children.
