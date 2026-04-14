@@ -1,10 +1,3 @@
-# 🚀 AEM Sling Servlet – 50 Interview Questions (README)
-
-This document contains **50 Sling Servlet Interview Questions with Answers & Code Snippets**
-Perfect for **AEM developer interview preparation (practical + coding focused)**.
-
----
-
 # 🔹 SECTION 1: Basics (1–10)
 
 ### 1. What is a Sling Servlet?
@@ -415,28 +408,3 @@ try {} catch(Exception e){}
 ```java
 "sling.servlet.resourceTypes=my/components/search"
 ```
-
----
-
-# 🎯 Final Tip
-
-Focus on:
-
-* ✅ Real API building
-* ✅ Validation + 422 handling
-* ✅ JSON responses
-* ✅ Query + pagination
-
----
-
-# ⭐ Bonus
-
-If you master these 50 questions, you are ready for:
-
-* AEM developer interviews
-* Real project scenarios
-* API-based questions
-
----
-
-**Good luck 🚀**
