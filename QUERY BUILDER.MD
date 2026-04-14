@@ -66,18 +66,9 @@ public class MySearchServiceImpl implements MySearchService {
   // 2. Adapt ResourceResolver to JCR Session
   Session session = resourceResolver.adaptTo(Session.class);
 
-  try {
-   // 3. Create and Execute Query
-   Query query = queryBuilder.createQuery(PredicateGroup.create(map), session);
-   SearchResult result = query.getResult();
-
-   // 4. Iterate over results
-   for (Hit hit : result.getHits()) {
-    Resource resource = hit.getResource();
-    pagePaths.add(resource.getPath());
-   }
-  } catch (Exception e) {
-   LOG.error("Error in query builder search", e);
+  try {// 3. Create and Execute QueryQuery query = queryBuilder.createQuery(PredicateGroup.create(map), session);SearchResult result = query.getResult();
+// 4. Iterate over resultsfor (Hit hit : result.getHits()) { Resource resource = hit.getResource(); pagePaths.add(resource.getPath());}
+  } catch (Exception e) {LOG.error("Error in query builder search", e);
   }
   return pagePaths;
  }
@@ -89,24 +80,15 @@ public class MySearchServiceImpl implements MySearchService {
 ### Part 3: 50 Interview Questions & Answers (With Code Snippets)
 
 #### Basics (1-10)
-1. **What is AEM Query Builder?**<br />Answer :
-   A framework/API to build search queries using key-value pairs without writing raw XPath or SQL2.
-2. **Where can you test Query Builder queries visually?**<br />Answer :
-   `/libs/cq/search/content/querydebug.html`.
-3. **What does Query Builder internally convert queries into?**<br />Answer :
-   It converts them into XPath queries.
-4. **Name 3 major objects in the Query Builder Java API.**
-   `QueryBuilder`, `Query`, `SearchResult`.
-5. **How do you restrict search to a specific path?**<br />Answer :
-   `path=/content/mysite`
-6. **How do you restrict search to a specific node type?**<br />Answer :
-   `type=cq:Page` or `type=dam:Asset`.
-7. **What does `p.limit=-1` mean?**<br />Answer :
-   It fetches all results, bypassing pagination. (Use with caution due to performance).
-8. **What is the default limit of results returned if not specified?**<br />Answer :
-   10 results.
-9. **How to get the total number of hits?**<br />Answer :
-   `result.getTotalMatches();`
+1. **What is AEM Query Builder?**<br />Answer :A framework/API to build search queries using key-value pairs without writing raw XPath or SQL2.
+2. **Where can you test Query Builder queries visually?**<br />Answer :`/libs/cq/search/content/querydebug.html`.
+3. **What does Query Builder internally convert queries into?**<br />Answer :It converts them into XPath queries.
+4. **Name 3 major objects in the Query Builder Java API.**`QueryBuilder`, `Query`, `SearchResult`.
+5. **How do you restrict search to a specific path?**<br />Answer :`path=/content/mysite`
+6. **How do you restrict search to a specific node type?**<br />Answer :`type=cq:Page` or `type=dam:Asset`.
+7. **What does `p.limit=-1` mean?**<br />Answer :It fetches all results, bypassing pagination. (Use with caution due to performance).
+8. **What is the default limit of results returned if not specified?**<br />Answer :10 results.
+9. **How to get the total number of hits?**<br />Answer :`result.getTotalMatches();`
 10. **How to do pagination (skip first 10 results)?**<br />Answer :
  `p.offset=10` and `p.limit=10`.
 
