@@ -161,7 +161,93 @@ This is the all discussed topics: **Sling Models, Servlets, OSGi Services, Servi
 18. **`jcr:all`**<br />Answer  :   Full permissions on a node.
 19. **Move node**<br />Answer  :   Needs `delete` on source and `add_node` on destination.
 20. **System User node type**<br />Answer  :   `rep:SystemUser`.
+Here are questions **21 to 50** for the **Service Users & Permissions** category, focusing on **programmatic checks, RepoInit troubleshooting, and multi-tenant security strategies**.
 
+---
+
+### **Section 3: Service Users & Permissions (Continued: 21-50)**
+
+#### **Programmatic Permission Checks (21-30)**
+21. **How do you check if a Service User can write to a specific path in Java?**
+      <br />Answer  :    `session.hasPermission(path, Session.ACTION_ADD_NODE)` or `ACTION_SET_PROPERTY`.
+22. **What is the `AccessControlManager`?**
+      <br />Answer  :    A JCR API used to programmatically retrieve, add, or modify ACLs/Policies on nodes.
+23. **How do you get a list of all privileges a user has on a node?**
+      <br />Answer  :    Use `accessControlManager.getPrivileges(path)`.
+24. **What is the difference between `session.checkPermission()` and `session.hasPermission()`?**
+      <br />Answer  :    `hasPermission` returns a boolean; `checkPermission` throws an `AccessControlException` if the permission is missing.
+25. **Can you check permissions using the `ResourceResolver` directly?**
+      <br />Answer  :    Not directly. You must adapt it: `resolver.adaptTo(Session.class)` or `resolver.adaptTo(AccessControlManager.class)`.
+26. **What are "Privileges" in JCR?**
+      <br />Answer  :    Aggregated rights like `jcr:read`, `jcr:modifyProperties`, `jcr:addChildNodes`, or the all-encompassing `jcr:all`.
+27. **How do you verify if a Service User has access to a specific OSGi service?**
+      <br />Answer  :    OSGi services aren't governed by JCR ACLs; access is controlled via code logic or Service Rankings.
+28. **How do you get the UserID of the current ResourceResolver?**
+      <br />Answer  :    `resolver.getUserID()`. For a service user, it will return the System User name.
+29. **What is the `UserManager` API?**
+      <br />Answer  :    An AEM/Sling API used to manage users and groups (creating users, adding users to groups).
+30. **How do you adapt a ResourceResolver to a `UserManager`?**
+      <br />Answer  :    `resolver.adaptTo(UserManager.class)`. This requires the service user to have read/write access to `/home/users`.
+
+#### **RepoInit & Deployment (31-40)**
+31. **What happens if a RepoInit script tries to create a path that already exists?**
+      <br />Answer  :    RepoInit is generally "idempotent." If you use `create path`, it ignores it if the path exists. However, `create service user` will fail if a *normal* user with that name already exists.
+32. **Where do you see RepoInit execution logs?**
+      <br />Answer  :    In the `error.log` during bundle activation or in the "Sling Repository Initializer" section of the Web Console.
+33. **Can you delete content using RepoInit?**
+      <br />Answer  :    No. RepoInit is designed for "initialization" (creating users, paths, and ACLs). It does not support `delete` for safety reasons.
+34. **How do you handle RepoInit errors in AEM Cloud?**
+      <br />Answer  :    If RepoInit fails, the **Cloud Manager pipeline will fail** during the "Deploy" phase. You must fix the script and push the code again.
+35. **What is the difference between `create path` and `create node` in RepoInit?**
+      <br />Answer  :    `create path` is used for simple folder structures; `create node` allows you to specify a primary type and properties.
+36. **How do you set a property on a node via RepoInit?**
+      <br />Answer  :    `set properties on /path { set myProp to "value" }`.
+37. **Can RepoInit be used to create regular (human) users?**
+      <br />Answer  :    No. It only supports `create service user`.
+38. **What is the best way to group multiple ACLs in RepoInit?**
+      <br />Answer  :    
+    ```text
+    set ACL on /content/siteA, /content/siteB
+        allow jcr:read for my-service-user
+    end
+    ```
+39. **Does RepoInit run every time AEM starts?**
+      <br />Answer  :    It runs during the bundle start phase. If the instructions have already been processed and the state matches, it does nothing.
+40. **Can you define RepoInit in a `.config` file?**
+      <br />Answer  :    Yes, it is defined in an OSGi configuration for `org.apache.sling.jcr.repoinit.RepositoryInitializer`.
+
+#### **Multi-tenant Security & Troubleshooting (41-50)**
+41. **How do you achieve "Tenant Isolation" in AEM?**
+      <br />Answer  :    By creating separate root paths for each tenant (e.g., `/content/tenant-a`, `/content/tenant-b`) and assigning unique Service Users to each.
+42. **What is a "Closed User Group" (CUG)?**
+      <br />Answer  :    A security feature that restricts access to a page (and its children) to a specific set of users/groups on the **Publish** instance.
+43. **Service User mapping is correct, but I still get `LoginException`. Why?**
+      <br />Answer  :    The System User might not have been created yet (check RepoInit), or the bundle symbolic name in the mapping is misspelled.
+44. **How do you check which Service User a specific bundle is using?**
+      <br />Answer  :    Check the **Service User Mapper** console in the Web Console (`/system/console/serviceusers`).
+45. **How to prevent one tenant's Servlet from accessing another tenant's data?**
+      <br />Answer  :    The Servlet should use a Service User with ACLs restricted **only** to that tenant's path.
+46. **What is the `rep:policy` node?**
+      <br />Answer  :    A hidden system node that stores the Access Control Entries (ACEs) for its parent node.
+47. **How do you move a Service User mapping from one environment to another?**
+      <br />Answer  :    Deploy it as an OSGi configuration (`.cfg.json`) via your Maven project.
+48. **Can a Service User be a member of a User Group?**
+      <br />Answer  :    Yes. This is a best practice for managing permissions across multiple service users.
+49. **Why should you avoid `jcr:all` even for Service Users?**
+      <br />Answer  :    It includes the ability to delete nodes and modify ACLs, which can lead to accidental data loss or security holes.
+50. **What is the "Everyone" group?**
+      <br />Answer  :    A built-in group that includes all users. If you `deny` something to the "everyone" group, it might block your service user too.
+
+---
+
+### **Top 3 Interview Troubleshooting Scenarios**
+
+1.  **"My code works on Author but fails on Publish."**
+    *   *Reason:* The Service User ACLs were not replicated or the RepoInit script wasn't deployed to the Publish environment.
+2.  **"I added permissions to /content, but I can't read /content/site/en."**
+    *   *Reason:* Check if there is a `deny` on the child node or if the user lacks `rep:read` on the parent `/content` node (required to traverse the tree).
+3.  **"RepoInit script is correct but users aren't created."**
+    *   *Reason:* The OSGi bundle containing the RepoInit config might be in the "Installed" state (not "Active") due to a missing dependency.
 ---
 
 ### **Part 4: Core JCR Concepts (Node vs Resource)**
