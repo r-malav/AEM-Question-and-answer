@@ -51,8 +51,67 @@ public class NotificationManager {
 *   **LDAP Syntax:** The `target` value uses standard LDAP filter syntax. For example: `(property=value)`.
 *   **Multiple Properties:** You can use complex filters like `(&(type=fast)(provider=aws))` to match multiple properties.
 *   **Dynamic Configuration:** In many systems (like Adobe Experience Manager), these target filters can also be overridden via OSGi Configuration (PID) in the web console, allowing you to change which service is injected without changing the code.
+---
 
+When you use **only** a `provider` property, you are usually choosing between different third-party vendors or specific internal implementations that perform the same task.
 
+### Example: Payment Gateway
+In this scenario, the application supports multiple payment vendors (Stripe and PayPal), but a specific service (like a "Subscription Manager") only wants to use **Stripe**.
+
+#### 1. The Service Interface
+```java
+public interface PaymentGateway {
+    void processPayment(double amount);
+}
+```
+
+#### 2. The Vendor Implementations
+Each service is registered with a `provider` property to identify which company's API it uses.
+
+```java
+// Implementation for Stripe
+@Component(service = PaymentGateway.class, property = "provider=stripe")
+public class StripeGateway implements PaymentGateway {
+    public void processPayment(double amount) {
+        System.out.println("Processing $" + amount + " via Stripe API.");
+    }
+}
+
+// Implementation for PayPal
+@Component(service = PaymentGateway.class, property = "provider=paypal")
+public class PayPalGateway implements PaymentGateway {
+    public void processPayment(double amount) {
+        System.out.println("Processing $" + amount + " via PayPal API.");
+    }
+}
+```
+
+#### 3. The Consumer (Filtering by Provider)
+The `SubscriptionService` needs to charge a credit card. It requires the **Stripe** implementation specifically because its logic is built around Stripe’s tokenization system.
+
+```java
+@Component(service = SubscriptionService.class)
+public class SubscriptionService {
+
+    // This target filter ensures ONLY the Stripe implementation is injected
+    @Reference(target = "(provider=stripe)")
+    private PaymentGateway stripeGateway;
+
+    public void monthlyBilling(double price) {
+        stripeGateway.processPayment(price);
+    }
+}
+```
+
+### Why use only `provider`?
+1.  **Vendor Lock-in (Intentional):** When certain parts of your code are only compatible with one specific vendor's API.
+2.  **A/B Testing:** You might have two versions of the same logic (e.g., `provider=legacy` and `provider=new`) and want to point specific components to the new one.
+3.  **Regional Requirements:** You might use `provider=taxJar` for US taxes and `provider=avalara` for EU taxes, and inject them into the appropriate regional service.
+
+### What happens if the target isn't found?
+If you use `@Reference(target = "(provider=stripe)")` and no component exists with that exact property, the OSGi component using it **will fail to satisfy** and will not start (it will remain in the `UNSATISFIED_REFERENCE` state).
+
+---
 
 In the context of OSGi service properties and `@Reference` targets, **`transport`** and **`provider`** are not reserved keywords. They are **custom property names** used to categorize services.
 
