@@ -1,4 +1,4 @@
-### Integrating OpenFeign with AEM Cloud
+### **Integrating OpenFeign with AEM Cloud**
 
 **OpenFeign** is a declarative REST client for Java that simplifies the process of making HTTP calls. In AEM Cloud Service projects, traditional integration using Apache HTTP Client often results in verbose, repetitive boilerplate code that is difficult to maintain. 
 
@@ -12,7 +12,7 @@ OpenFeign solves this by allowing developers to define API contracts using **int
 
 ---
 
-### ** Interview Questions & Answers (OpenFeign in AEM)**
+### **Interview Questions & Answers (OpenFeign in AEM)**
 
 #### **1. What is OpenFeign, and how does it differ from traditional HTTP clients?**
 **Answer:** OpenFeign is a declarative web service client. Unlike traditional clients (like Apache HttpClient) where you manually write code to build requests and parse responses, Feign allows you to define an interface and annotate it. Feign then generates the implementation at runtime.
