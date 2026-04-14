@@ -59,72 +59,72 @@ This is the all discussed topics: **Sling Models, Servlets, OSGi Services, Servi
 
 #### **OSGi Configuration Admin (21-30)**
 21. **Where are OSGi configurations stored in the JCR?**
-    *   **Ans:** Usually under `/apps/myapp/config` or `/apps/myapp/config.<runmode>`.
+  <br />Answer  :    Usually under `/apps/myapp/config` or `/apps/myapp/config.<runmode>`.
 22. **What is the priority of OSGi configurations?**
-    *   **Ans:** Runmode-specific folders (e.g., `config.publish.prod`) have higher priority than the generic `config` folder.
+  <br />Answer  :    Runmode-specific folders (e.g., `config.publish.prod`) have higher priority than the generic `config` folder.
 23. **What is the `@Designate` annotation?**
-    *   **Ans:** It links an OSGi `@Component` to its configuration class (`@ObjectClassDefinition`).
+  <br />Answer  :    It links an OSGi `@Component` to its configuration class (`@ObjectClassDefinition`).
 24. **How do you define a dropdown (select) field in OSGi configurations?**
-    *   **Ans:** In the `@AttributeDefinition`, use the `options` attribute with `@Option` annotations.
+  <br />Answer  :    In the `@AttributeDefinition`, use the `options` attribute with `@Option` annotations.
 25. **Can you read OSGi configurations in a Sling Model?**
-    *   **Ans:** No directly. You should read them in an OSGi service and then inject that service into the Sling Model.
+  <br />Answer  :    No directly. You should read them in an OSGi service and then inject that service into the Sling Model.
 26. **What is the difference between `.cfg.json`, `.config`, and `.xml` configurations?**
-    *   **Ans:** `.cfg.json` is the modern standard for AEM Cloud; `.config` is Apache Felix's internal format; `.xml` (sling:OsgiConfig) is the legacy JCR format.
+  <br />Answer  :    `.cfg.json` is the modern standard for AEM Cloud; `.config` is Apache Felix's internal format; `.xml` (sling:OsgiConfig) is the legacy JCR format.
 27. **What is the "Configuration Admin" service?**
-    *   **Ans:** An OSGi service that manages the lifecycle and distribution of configurations to registered components.
+  <br />Answer  :    An OSGi service that manages the lifecycle and distribution of configurations to registered components.
 28. **How do you handle sensitive data (passwords) in OSGi configs?**
-    *   **Ans:** In AEMaaCS, use **Secret Environment Variables**. In older versions, use **Crypto Support** (encrypted strings).
+  <br />Answer  :    In AEMaaCS, use **Secret Environment Variables**. In older versions, use **Crypto Support** (encrypted strings).
 29. **What happens to a service if its configuration is deleted?**
-    *   **Ans:** The service is usually deactivated unless the code is written to handle default values.
+  <br />Answer  :    The service is usually deactivated unless the code is written to handle default values.
 30. **What is a "Runmode"?**
-    *   **Ans:** A keyword (e.g., `author`, `publish`, `prod`) that tells AEM which configuration or code to activate for that specific environment.
+  <br />Answer  :    A keyword (e.g., `author`, `publish`, `prod`) that tells AEM which configuration or code to activate for that specific environment.
 
 #### **Factory Configurations (31-40)**
 31. **What is an OSGi Factory Configuration?**
-    *   **Ans:** A way to create multiple instances of the same service, each with different configuration settings (e.g., multiple different API connectors).
+  <br />Answer  :    A way to create multiple instances of the same service, each with different configuration settings (e.g., multiple different API connectors).
 32. **How do you define a Factory Configuration in R7?**
-    *   **Ans:** Set `factory = true` in the `@Component` annotation.
+  <br />Answer  :    Set `factory = true` in the `@Component` annotation.
 33. **How does the system distinguish between factory instances?**
-    *   **Ans:** Each instance gets a unique **Persistent Identity (PID)** usually formatted as `service.pid~name`.
+  <br />Answer  :    Each instance gets a unique **Persistent Identity (PID)** usually formatted as `service.pid~name`.
 34. **How do you retrieve a specific instance of a factory service?**
-    *   **Ans:** Use `@Reference` with a target filter that matches a unique property of that instance.
+  <br />Answer  :    Use `@Reference` with a target filter that matches a unique property of that instance.
 35. **What is the role of the `name` attribute in a factory config file?**
-    *   **Ans:** The filename (e.g., `com.myapp.MyService~config1.cfg.json`) determines the unique identifier for that instance.
+  <br />Answer  :    The filename (e.g., `com.myapp.MyService~config1.cfg.json`) determines the unique identifier for that instance.
 36. **Can you use Factory Configs for Servlets?**
-    *   **Ans:** Yes, if you need multiple servlets of the same type but mapped to different paths via configuration.
+  <br />Answer  :    Yes, if you need multiple servlets of the same type but mapped to different paths via configuration.
 37. **What happens if two factory configs have the same PID?**
-    *   **Ans:** The OSGi framework will overwrite one with the other; they must have unique names after the `~` symbol.
+  <br />Answer  :    The OSGi framework will overwrite one with the other; they must have unique names after the `~` symbol.
 38. **What is the `configurationPolicy` in `@Component`?**
-    *   **Ans:** It determines if a component requires a config to start (`REQUIRE`), ignores configs (`IGNORE`), or uses them if available (`OPTIONAL`).
+  <br />Answer  :    It determines if a component requires a config to start (`REQUIRE`), ignores configs (`IGNORE`), or uses them if available (`OPTIONAL`).
 39. **How do you update a factory config programmatically?**
-    *   **Ans:** Use the `ConfigurationAdmin` service to get the factory configuration by PID and call `update(Dictionary)`.
+  <br />Answer  :    Use the `ConfigurationAdmin` service to get the factory configuration by PID and call `update(Dictionary)`.
 40. **When should you use a Factory Config over a standard Config?**
-    *   **Ans:** When you need a variable number of service instances (like multiple RSS feeds or multiple SMTP servers).
+  <br />Answer  :    When you need a variable number of service instances (like multiple RSS feeds or multiple SMTP servers).
 
 #### **Troubleshooting & Circular References (41-50)**
 41. **What is a Circular Reference (Circular Dependency)?**
-    *   **Ans:** When Service A references Service B, and Service B references Service A.
+  <br />Answer  :    When Service A references Service B, and Service B references Service A.
 42. **How do you detect a Circular Reference?**
-    *   **Ans:** The bundles will remain in the "Satisfied" state but will never "Activate," or you will see a `Circular Reference` error in the logs.
+  <br />Answer  :    The bundles will remain in the "Satisfied" state but will never "Activate," or you will see a `Circular Reference` error in the logs.
 43. **How do you fix a Circular Reference?**
-    *   **Ans:** 
+  <br />Answer  :    
         1. Refactor code to remove the dependency.
         2. Use `ReferencePolicy.DYNAMIC` and `ReferenceStrategy.LOOKUP`.
         3. Use a third service (Service C) to hold the shared logic.
 44. **What is the difference between "Static" and "Dynamic" references?**
-    *   **Ans:** Static references (default) restart the component when the reference changes. Dynamic references (`policy = ReferencePolicy.DYNAMIC`) do not restart the component.
+  <br />Answer  :    Static references (default) restart the component when the reference changes. Dynamic references (`policy = ReferencePolicy.DYNAMIC`) do not restart the component.
 45. **What does the "Unsatisfied Reference" error mean?**
-    *   **Ans:** It means the `@Reference` you are trying to inject is not available or active in the OSGi container.
+  <br />Answer  :    It means the `@Reference` you are trying to inject is not available or active in the OSGi container.
 46. **What is a "Service Ranking" tie-breaker?**
-    *   **Ans:** If two services have the same ranking, the OSGi framework picks the one with the lowest **Service ID** (the one registered first).
+  <br />Answer  :    If two services have the same ranking, the OSGi framework picks the one with the lowest **Service ID** (the one registered first).
 47. **What is the "Bundle Context"?**
-    *   **Ans:** An object used to communicate with the OSGi framework, allowing you to manually register services or search for other services.
+  <br />Answer  :    An object used to communicate with the OSGi framework, allowing you to manually register services or search for other services.
 48. **How do you debug a Servlet that isn't firing?**
-    *   **Ans:** Check the **Sling Servlet Resolver** console (`/system/console/servletresolver`) to see which servlet is actually bound to a URL.
+  <br />Answer  :    Check the **Sling Servlet Resolver** console (`/system/console/servletresolver`) to see which servlet is actually bound to a URL.
 49. **What is a "Service Leak"?**
-    *   **Ans:** When a component gets a service via `getService()` but fails to release it, preventing the bundle from stopping cleanly.
+  <br />Answer  :    When a component gets a service via `getService()` but fails to release it, preventing the bundle from stopping cleanly.
 50. **How do you see the properties of an active service?**
-    *   **Ans:** Go to the **Services Console** (`/system/console/services`) and search for the service PID.
+  <br />Answer  :    Go to the **Services Console** (`/system/console/services`) and search for the service PID.
 
 ---
 
