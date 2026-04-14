@@ -18,7 +18,31 @@ public class ExampleServlet extends SlingSafeMethodsServlet {
 }
 ```
 
----
+```java
+
+@Component(service = Servlet.class, property = {
+        ServletResolverConstants.SLING_SERVLET_METHODS + "=" + HttpConstants.METHOD_GET,
+        ServletResolverConstants.SLING_SERVLET_PATHS + "=" + "/bin/example"
+})
+public class ExampleServlet extends SlingSafeMethodsServlet {
+}
+```
+
+```java
+
+@Component(service = Servlet.class, property = {
+        ServletResolverConstants.SLING_SERVLET_METHODS + "=" + HttpConstants.METHOD_GET,
+
+        ServletResolverConstants.SLING_SERVLET_RESOURCE_TYPES + "=" + "wknd/content/us/en/magazine",
+        ServletResolverConstants.SLING_SERVLET_RESOURCE_TYPES + "=" + "wknd/content/us/en/adventures",
+        ServletResolverConstants.SLING_SERVLET_RESOURCE_TYPES + "=" + "wknd/content/us/en/faqs",
+        ServletResolverConstants.SLING_SERVLET_RESOURCE_TYPES + "=" + "wknd/content/us/en/about",
+
+        ServletResolverConstants.SLING_SERVLET_EXTENSIONS + "=" + "json"
+})
+public class ExampleServlet extends SlingSafeMethodsServlet {
+}
+```
 
 ### 3. Difference: SlingSafeMethodsServlet vs SlingAllMethodsServlet
 
