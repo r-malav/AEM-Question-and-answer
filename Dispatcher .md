@@ -76,7 +76,7 @@ In modern AEM (and AEM Cloud Service), the Dispatcher is configured using a spec
 7. What is the "Docroot"<br />Answer  :   The physical directory on the webserver where cached files are stored.
 8. What is `dispatcher.any`<br />Answer  :   The main configuration file.
 9. What is a "Farm"<br />Answer  :   A set of configurations for a specific website or group of sites.
-10. Explain Load Balancing in Dispatcher.** It uses the `/renders` section to distribute traffic.
+10. Explain Load Balancing in Dispatcher.?<br />Answer  : It uses the `/renders` section to distribute traffic.
 11. What are "Sticky Sessions"<br />Answer  :   Ensuring one user stays on one AEM node to maintain session data.
 12. What happens if the Publisher is down<br />Answer  :   Dispatcher serves cached content if available; otherwise, a 502/503 error.
 13. Can Dispatcher cache JSON<br />Answer  :   Yes, if the headers and extensions are configured correctly.
