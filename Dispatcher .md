@@ -86,7 +86,7 @@ In modern AEM (and AEM Cloud Service), the Dispatcher is configured using a spec
 17. What is the `.stat` file?<br />Answer  :   A file used to determine the age of cached content for invalidation.
 18. What is the "Statslevel"?<br />Answer  :   Determines how many levels of folders are invalidated when a `.stat` file is updated.
 19. What is `/clientheaders`?<br />Answer  :   Defines which HTTP headers are passed from the user to AEM.
-20. **Can you have multiple Farms?<br />Answer  :   Yes.
+20. Can you have multiple Farms?<br />Answer  :   Yes.
 
 #### Caching & Invalidation (21-40)
 21. How to invalidate the cache?<br />Answer  :   Via Flush Agents on AEM Publisher or manual deletion.
