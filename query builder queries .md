@@ -125,8 +125,35 @@ A comprehensive guide to AEM QueryBuilder queries in JSON format for use in Java
 ```json
 {
   "path": "/content/my-site",
+"type": "cq:Page",
   "fulltext": "bank",
   "p.limit": 20
+}
+```
+```json
+{
+  "path": "/content/your-path",
+  "type": "cq:Page",
+  "fulltext": "your-query-text",
+  "fulltext.and": "true",
+  "group.p.or": "true",
+
+  "group.1_fulltext": "your-query-text",
+  "group.1_fulltext.relPath": "jcr:content",
+  "group.1_fulltext.and": "true",
+
+  "group.2_fulltext": "your-query-text",
+  "group.2_fulltext.relPath": "jcr:content/root",
+  "group.2_fulltext.and": "true",
+
+  "group.3_fulltext": "your-query-text",
+  "group.3_fulltext.relPath": "jcr:content/par",
+  "group.3_fulltext.and": "true",
+
+  "p.limit": "10",
+  "p.offset": "0",
+  "orderby": "@jcr:content/cq:lastReplicated",
+  "orderby.sort": "desc"
 }
 ```
 
@@ -246,5 +273,4 @@ A comprehensive guide to AEM QueryBuilder queries in JSON format for use in Java
   "p.offset": "20",
   "p.limit": "10"
 }
-```
 ```
