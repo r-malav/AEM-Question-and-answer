@@ -1,16 +1,20 @@
 # Part 1: Level 1 - Fundamentals (Questions 1–25)
 
 **1. What is a Workflow in AEM?**
-**Answer:** A workflow is a sequence of steps used to automate a business process. It allows AEM to move a "payload" (usually a page or asset) through a series of predefined tasks (e.g., Review $\rightarrow$ Approval $\rightarrow$ Activation).
+**Answer:** 
+A workflow is a sequence of steps used to automate a business process. It allows AEM to move a "payload" (usually a page or asset) through a series of predefined tasks (e.g., Review $\rightarrow$ Approval $\rightarrow$ Activation).
 
 **2. What is the "Payload" in a workflow?**
-**Answer:** The payload is the object that the workflow is operating on. It is usually a path to a node in the JCR (e.g., `/content/dam/my-image.jpg`). The payload is passed from one step to the next.
+**Answer:** 
+The payload is the object that the workflow is operating on. It is usually a path to a node in the JCR (e.g., `/content/dam/my-image.jpg`). The payload is passed from one step to the next.
 
 **3. What is a Workflow Model?**
-**Answer:** A Workflow Model is the "blueprint" or the visual design of the process. It defines the steps, the order of execution, and the logic (splits/joins). It is stored under `/var/workflow/models`.
+**Answer:** 
+A Workflow Model is the "blueprint" or the visual design of the process. It defines the steps, the order of execution, and the logic (splits/joins). It is stored under `/var/workflow/models`.
 
 **4. What is a Workflow Instance?**
-**Answer:** An instance is a specific "run" of a workflow model. While the model is the blueprint, the instance is the actual execution for a specific piece of content.
+**Answer:** 
+An instance is a specific "run" of a workflow model. While the model is the blueprint, the instance is the actual execution for a specific piece of content.
 
 **5. What is a Participant Step?**
 **Answer:** A step that requires human intervention. The workflow pauses at this step and assigns a task to a specific user or group. The workflow only proceeds once the user completes the task.
