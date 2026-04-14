@@ -253,20 +253,3 @@ session.save();
 node.addNode("childNodeName", "nt:unstructured");
 ```
 
----
-
-## Summary of 100+ Topics to Study
-*   **AEM Basics:** Replication, Activation, Author vs Publish, Dispatcher.
-*   **JCR:** Node types (`cq:Page`, `dam:Asset`), Mixins, Versions.
-*   **Sling:** Resolution process, Selectors, Extensions, Suffix.
-*   **OSGi:** Bundles, Services, Configurations, Components.
-*   **DAM:** Asset metadata, Workflows, Renditions.
-*   **Core Components:** Proxy components, Image, List, Navigation.
-*   **Advanced:** Context-Aware Configs (CA Conf), Content Fragments, Experience Fragments.
-
----
-
-### Instructions for Usage
-1.  Save this content as `README.md`.
-2.  Open in any Markdown viewer or upload to a Git repository.
-3.  Focus on the **Recursive Logic** (Question 8) and **Tagging API** (Questions 12-16) as these are high-priority coding questions.
