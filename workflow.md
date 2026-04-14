@@ -83,93 +83,93 @@ public class CustomStep implements WorkflowProcess {
 ### Part 3: 50 Interview Questions & Answers (With Code Snippets)
 
 #### Basics
-1. **What is an AEM Workflow?**
+1. **What is an AEM Workflow?**<br />Answer :
    Automated series of steps to manage content/assets.
-2. **What are the three main parts of a workflow?**
+2. **What are the three main parts of a workflow?**<br />Answer :
    Model, Step, Payload.
-3. **Difference between Workflow and Launcher?**
+3. **Difference between Workflow and Launcher?**<br />Answer :
    Model is the design; Launcher is the trigger based on JCR events.
-4. **How do you start a workflow manually?**
+4. **How do you start a workflow manually?**<br />Answer :
    Via the Workflow console or the "Start Workflow" button in the Page/Asset editor.
-5. **Where are workflows stored in AEM 6.5 vs AEM as a Cloud Service?**
+5. **Where are workflows stored in AEM 6.5 vs AEM as a Cloud Service?**<br />Answer :
    AEM 6.5: `/etc/workflow/models`. AEMaaCS/Recent: `/var/workflow/models`.
 
 #### Development & Code
-6. **Which interface is used to create a custom process step?**
+6. **Which interface is used to create a custom process step?**<br />Answer :
    `com.adobe.granite.workflow.exec.WorkflowProcess`.
-7. **What is the use of `MetaDataMap` in the `execute` method?**
+7. **What is the use of `MetaDataMap` in the `execute` method?**<br />Answer :
    To read arguments passed to the step via the AEM UI.
    ```java
    String myArg = processArgs.get("PROCESS_ARGS", "default");
    ```
-8. **How to get the JCR Session inside a workflow?**
+8. **How to get the JCR Session inside a workflow?**<br />Answer :
    `Session session = workflowSession.adaptTo(Session.class);`
-9. **How to access the payload path?**
+9. **How to access the payload path?**<br />Answer :
    `workItem.getWorkflowData().getPayload().toString();`
-10. **What is the purpose of `Handler Advance` in a Process Step?**
+10. **What is the purpose of `Handler Advance` in a Process Step?**<br />Answer :
     If checked, the workflow automatically moves to the next step after the Java code completes.
-11. **How do you handle errors in a workflow?**
+11. **How do you handle errors in a workflow?**<br />Answer :
     Throw a `WorkflowException`.
-12. **Can you inject an OSGi Service into a Workflow Process?**
+12. **Can you inject an OSGi Service into a Workflow Process?**<br />Answer :
     Yes, using `@Reference`.
-13. **How do you create a Dynamic Participant Step?**
+13. **How do you create a Dynamic Participant Step?**<br />Answer :
     Implement `ParticipantStepChooser` and return the `Principal` ID.
 14. **Explain the `WorkflowSession` object.**
     It provides methods to manage workflow instances, find items, and terminate workflows.
-15. **How to send an email via workflow?**
+15. **How to send an email via workflow?**<br />Answer :
     Use the out-of-the-box "Participant Step" or write a custom step using `MessageGatewayService`.
 
 #### Advanced Logic
-16. **What is an OR Split?**
+16. **What is an OR Split?**<br />Answer :
     A conditional branch where only one path is taken.
-17. **What is an AND Split?**
+17. **What is an AND Split?**<br />Answer :
     A parallel branch where all paths execute simultaneously.
-18. **Difference between `WorkItem` and `Workflow` object?**
+18. **Difference between `WorkItem` and `Workflow` object?**<br />Answer :
     `WorkItem` is the current task; `Workflow` is the entire running instance.
-19. **How to bypass workflow for specific users?**
+19. **How to bypass workflow for specific users?**<br />Answer :
     Configure the Launcher to exclude specific users in the "Exclude List".
-20. **What are Workflow Packages?**
+20. **What are Workflow Packages?**<br />Answer :
     A way to group multiple resources (pages/assets) and process them through a single workflow.
-21. **How do you terminate a workflow programmatically?**
+21. **How do you terminate a workflow programmatically?**<br />Answer :
     `workflowSession.terminateWorkflow(workItem.getWorkflow());`
-22. **What is the "Transient Workflow"?**
+22. **What is the "Transient Workflow"?**<br />Answer :
     Workflows that do not save history to `/var/workflow/instances`, improving performance for high-volume asset processing.
-23. **How to make a workflow Transient?**
+23. **How to make a workflow Transient?**<br />Answer :
     Check the "Transient Workflow" box in the Workflow Model properties.
-24. **How to retrieve workflow metadata like 'Initiator'?**
+24. **How to retrieve workflow metadata like 'Initiator'?**<br />Answer :
     `workItem.getWorkflow().getInitiator();`
-25. **How to find all active workflow instances?**
+25. **How to find all active workflow instances?**<br />Answer :
     Use `workflowSession.getWorkflows(new String[]{"RUNNING"});`
 
 #### Asset Processing
-26. **What is the DAM Update Asset workflow?**
+26. **What is the DAM Update Asset workflow?**<br />Answer :
     The default workflow that generates renditions and extracts metadata for assets.
-27. **How to disable DAM Update Asset for a specific folder?**
+27. **How to disable DAM Update Asset for a specific folder?**<br />Answer :
     Use a launcher with a condition or use the "Exclude" property in AEMaaCS.
-28. **What is a "Sub-workflow"?**
+28. **What is a "Sub-workflow"?**<br />Answer :
     A workflow model called inside another workflow model using the "Container Step".
-29. **How to pass data between steps?**
+29. **How to pass data between steps?**<br />Answer :
     Store it in `workItem.getWorkflow().getWorkflowData().getMetaDataMap()`.
 30. **Explain Workflow Offloading.**
     Moving workflow execution to a different AEM instance (usually for heavy asset processing).
 
 #### Implementation Scenarios (With Code snippets)
-31. **How to restrict a workflow to run only on a specific path via code?**
+31. **How to restrict a workflow to run only on a specific path via code?**<br />Answer :
     ```java
     if (!path.startsWith("/content/mysite")) return; 
     ```
-32. **How to get the page title from a payload?**
+32. **How to get the page title from a payload?**<br />Answer :
     ```java
     ResourceResolver rr = workflowSession.adaptTo(ResourceResolver.class);
     Page page = rr.resolve(path).adaptTo(Page.class);
     String title = page.getTitle();
     ```
-33. **How to trigger a workflow programmatically?**
+33. **How to trigger a workflow programmatically?**<br />Answer :
     ```java
     WorkflowModel model = workflowSession.getModel("/var/workflow/models/request_for_activation");
     workflowSession.startWorkflow(model, workflowSession.newWorkflowData("JCR_PATH", "/content/path"));
     ```
-34. **How to create a custom Participant Step chooser?**
+34. **How to create a custom Participant Step chooser?**<br />Answer :
     ```java
     @Component(service = ParticipantStepChooser.class, property = {"chooser.label=Manager Chooser"})
     public class MyChooser implements ParticipantStepChooser {
@@ -178,41 +178,41 @@ public class CustomStep implements WorkflowProcess {
         }
     }
     ```
-35. **How to update a specific property on the metadata node of a workflow instance?**
+35. **How to update a specific property on the metadata node of a workflow instance?**<br />Answer :
     `workItem.getMetaDataMap().put("status", "completed");`
 
 #### Performance & Administration
-36. **How to purge old workflow instances?**
+36. **How to purge old workflow instances?**<br />Answer :
     Use the "Workflow Purge Configuration" in OSGi.
-37. **How to monitor workflow health?**
+37. **How to monitor workflow health?**<br />Answer :
     AEM Workflow Dashboard or JMX MBeans.
-38. **What is the impact of not purging workflows?**
+38. **What is the impact of not purging workflows?**<br />Answer :
     Significant JCR bloating and slow query performance.
-39. **How to restart a failed workflow step?**
+39. **How to restart a failed workflow step?**<br />Answer :
     Via the Workflow Inbox or the Instances console.
-40. **How many types of steps are available in AEM?**
+40. **How many types of steps are available in AEM?**<br />Answer :
     Participant, Process, Container, Goto, OR/AND Split, Dialog, External Process.
 
 #### AEM as a Cloud Service (AEMaaCS)
-41. **Is "Workflow Purge" needed in AEMaaCS?**
+41. **Is "Workflow Purge" needed in AEMaaCS?**<br />Answer :
     No, it's managed automatically.
-42. **Can we use "DAM Update Asset" in AEMaaCS?**
+42. **Can we use "DAM Update Asset" in AEMaaCS?**<br />Answer :
     It's replaced by "Asset Compute Service," but the workflow still exists for post-processing.
-43. **Where is the Workflow UI in AEM Cloud?**
+43. **Where is the Workflow UI in AEM Cloud?**<br />Answer :
     Under Tools -> Workflow.
-44. **How to define workflow models in AEMaaCS?**
+44. **How to define workflow models in AEMaaCS?**<br />Answer :
     They must be defined in the `ui.content` package and synced via Git.
-45. **What happens to running workflows during a Cloud deployment?**
+45. **What happens to running workflows during a Cloud deployment?**<br />Answer :
     AEM tries to persist state, but it's best to avoid long-running workflows during deployment windows.
 
 #### Troubleshooting
-46. **A workflow is stuck in "RUNNING" state. Why?**
+46. **A workflow is stuck in "RUNNING" state. Why?**<br />Answer :
     Check for an "Infinite Loop" or a "Participant Step" waiting for user action.
-47. **Custom process step is not showing in the dropdown. Why?**
+47. **Custom process step is not showing in the dropdown. Why?**<br />Answer :
     Check if the OSGi component is active and `process.label` is defined.
-48. **Launcher is not triggering. Why?**
+48. **Launcher is not triggering. Why?**<br />Answer :
     Check if "Enable" is checked and if the globbing path is correct.
-49. **How to log payload info for debugging?**
+49. **How to log payload info for debugging?**<br />Answer :
     `LOG.info("Workflow Payload: {}", workItem.getWorkflowData().getPayload());`
-50. **How to skip a step if a condition is met?**
+50. **How to skip a step if a condition is met?**<br />Answer :
     Use a "Goto Step" with a script or a custom "Process Step" that evaluates logic and moves the item.
