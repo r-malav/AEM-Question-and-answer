@@ -1,7 +1,3 @@
-Providing 100+ coding-specific questions and answers for AEM is a massive undertaking. To make this useful for your interview, I have structured this into **categories** with the actual **Java/HTL/JavaScript code** for each.
-
----
-
 ### Part 1: Page Properties & Resource API (Coding)
 
 **1. How do you get a Page object from a Resource?**
