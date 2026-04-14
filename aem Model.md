@@ -143,3 +143,36 @@
     *   *Ans:* Ensure it has `@Exporter` and all getter methods are public.
 50. **What is the lifecycle of a Sling Model?**
     *   *Ans:* Instantiated on demand -> Fields Injected -> `@PostConstruct` called -> Model returned -> Garbage collected (it is not a singleton).
+   
+### **Section 1: Sling Models (Backend Logic)**
+
+**1. What is a Sling Model?**
+*   **Ans:** An annotation-driven POJO that maps JCR data directly to Java objects.
+
+**2. Difference between `@Inject` and `@ValueMapValue`?**
+*   **Ans:** `@Inject` is generic and searches all injectors (slow); `@ValueMapValue` is specific to JCR properties (fast/safe).
+
+**3. What is the use of `@PostConstruct`?**
+*   **Ans:** It marks a method to run after all fields are injected. Used for initialization logic.
+
+**4. What are the two primary `adaptables` in Sling Models?**
+*   **Ans:** `Resource.class` and `SlingHttpServletRequest.class`.
+
+**5. How do you handle a mandatory field in a Sling Model?**
+*   **Ans:** By default, fields are `@Required`. If the field is missing, the model returns `null`.
+
+**6. How do you make a field optional?**
+*   **Ans:** Use the `@Optional` annotation or set `defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL` in `@Model`.
+
+**7. What is the Sling Model Exporter?**
+*   **Ans:** A feature to serialize Sling Models into JSON via Jackson, used for headless or API-based delivery.
+
+**8. Can a Sling Model be an interface?**
+*   **Ans:** Yes. Sling will automatically provide the implementation at runtime.
+
+**9. How do you inject an OSGi service into a Sling Model?**
+*   **Ans:** Use the `@OSGiService` annotation.
+
+**10. What is the `@Self` annotation used for?**
+*   **Ans:** To inject the adaptable object itself (e.g., the current Resource) or to adapt the resource into another object.
+
