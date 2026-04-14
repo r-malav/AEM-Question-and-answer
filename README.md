@@ -1,65 +1,65 @@
-This is a comprehensive **README.md** file containing over 100 interview coding scenarios, logic questions, and answers for AEM (Adobe Experience Manager) developers.
-
-You can copy and save this content directly into a `README.md` file for your preparation.
+Providing 100+ coding-specific questions and answers for AEM is a massive undertaking. To make this useful for your interview, I have structured this into **categories** with the actual **Java/HTL/JavaScript code** for each.
 
 ---
 
-# AEM Interview Coding Questions & Answers (100+ Scenarios)
+### Part 1: Page Properties & Resource API (Coding)
 
-This repository contains a curated list of AEM technical interview questions focusing on **Page Properties, Nested Hierarchy Traversal, Tagging API, Sling Models, and HTL.**
-
-## Table of Contents
-1. [Page API & Property Handling](#1-page-api--property-handling)
-2. [Hierarchy & Nested Child Traversal](#2-hierarchy--nested-child-traversal)
-3. [Tagging API Scenarios](#3-tagging-api-scenarios)
-4. [Sling Models & Annotations](#4-sling-models--annotations)
-5. [HTL (Sightly) Logic](#5-htl-sightly-logic)
-6. [QueryBuilder & Search](#6-querybuilder--search)
-7. [Servlets & OSGi Services](#7-servlets--osgi-services)
-8. [JCR & Node API](#8-jcr--node-api)
-
----
-
-## 1. Page API & Property Handling
-
-**Q1: How do you get a Page object from a Resource?**
+**1. How do you get a Page object from a Resource?**
 ```java
 Page page = resource.adaptTo(Page.class);
 ```
 
-**Q2: How do you read a property named "navTitle" with a fallback to "jcr:title"?**
+**2. How do you read a property "subtitle" from a page?**
 ```java
 ValueMap properties = page.getProperties();
-String title = properties.get("navTitle", properties.get("jcr:title", String.class));
+String subtitle = properties.get("subtitle", String.class);
 ```
 
-**Q3: How do you check if a page is "Hidden in Navigation" programmatically?**
+**3. How do you provide a default value if a property is missing?**
 ```java
-boolean isHidden = page.isHideInNav();
+String title = properties.get("jcr:title", "No Title Provided");
 ```
 
-**Q4: How do you get the Template path used by a page?**
+**4. How do you get the Template path of a page?**
 ```java
 String templatePath = page.getTemplate().getPath();
 ```
 
-**Q5: How do you get the last modified date of a page?**
+**5. How do you check if a page is hidden in navigation?**
+```java
+boolean isHidden = page.isHideInNav();
+```
+
+**6. How do you get the path of the current page?**
+```java
+String path = page.getPath();
+```
+
+**7. How do you get the Page Manager from a Resource Resolver?**
+```java
+PageManager pageManager = resolver.adaptTo(PageManager.class);
+```
+
+**8. How do you get a Page object if you only have a path string?**
+```java
+Page page = pageManager.getPage("/content/we-retail/us/en");
+```
+
+**9. How do you find the "Language" of a page?**
+```java
+Locale locale = page.getLanguage(false);
+```
+
+**10. How do you get the last modified date?**
 ```java
 Calendar lastMod = page.getLastModified();
 ```
 
-**Q6: How to read page properties of a specific path?**
-```java
-PageManager pageManager = resolver.adaptTo(PageManager.class);
-Page targetPage = pageManager.getPage("/content/project/en");
-ValueMap vm = targetPage.getProperties();
-```
-
 ---
 
-## 2. Hierarchy & Nested Child Traversal
+### Part 2: Reading Child Pages & Nested Traversal (Recursion)
 
-**Q7: How do you list all immediate children of a page?**
+**11. How do you list immediate child pages?**
 ```java
 Iterator<Page> children = page.listChildren();
 while(children.hasNext()) {
@@ -67,189 +67,353 @@ while(children.hasNext()) {
 }
 ```
 
-**Q8: CODING CHALLENGE: Write a recursive function to read ALL nested child pages.**
+**12. Coding Question: Write a method to print all nested child paths (Deep Tree).**
 ```java
-public void readNestedPages(Page parent) {
-    Iterator<Page> children = parent.listChildren();
+public void printAllPaths(Page page) {
+    Iterator<Page> children = page.listChildren();
     while(children.hasNext()) {
         Page child = children.next();
-        System.out.println("Page Path: " + child.getPath());
-        readNestedPages(child); // RECURSIVE CALL
+        System.out.println(child.getPath());
+        printAllPaths(child); // Recursive call
     }
 }
 ```
 
-**Q9: How do you filter children to show only "Valid" pages (not hidden, not deleted)?**
+**13. How do you list children while filtering out hidden pages?**
 ```java
 Iterator<Page> children = page.listChildren(new PageFilter(false, false));
 ```
 
-**Q10: How do you find the "Parent" page at a specific absolute level (e.g., Level 2)?**
+**14. How do you find the "Parent" of the current page?**
+```java
+Page parent = page.getParent();
+```
+
+**15. How do you get the page at a specific depth (e.g., Level 2)?**
 ```java
 Page level2Page = page.getAbsoluteParent(2);
 ```
 
-**Q11: How do you get the depth of the current page in the JCR?**
+**16. How do you check if a page has any children?**
+```java
+boolean hasChildren = page.listChildren().hasNext();
+```
+
+**17. How do you list only children that are "activated" (replicated)?**
+(This requires checking the `cq:lastReplicationAction` property in the `jcr:content` node).
+
+**18. How do you get the "depth" of a page?**
 ```java
 int depth = page.getDepth();
 ```
 
+**19. How do you get the Resource of a page?**
+```java
+Resource res = page.getContentResource();
+```
+
+**20. How do you find the next sibling page?**
+```java
+PageManager pm = page.getPageManager();
+// Usually involves getting parent, then iterating children until finding current + 1.
+```
+
 ---
 
-## 3. Tagging API Scenarios
+### Part 3: Reading Tags (Tagging API)
 
-**Q12: How do you get all tags assigned to a Page object?**
+**21. How do you get all tags from a Page?**
 ```java
 Tag[] tags = page.getTags();
 ```
 
-**Q13: How do you read the title of a specific Tag?**
+**22. How do you get the title of a tag?**
 ```java
-String tagTitle = tag.getTitle(); // Standard title
-String tagID = tag.getTagID(); // namespace:category/tag
+String title = tag.getTitle();
 ```
 
-**Q14: How do you resolve a Tag ID string into a Tag object?**
+**23. How do you get the Tag Manager?**
+```java
+TagManager tagManager = resourceResolver.adaptTo(TagManager.class);
+```
+
+**24. How do you resolve a Tag ID to a Tag object?**
+```java
+Tag tag = tagManager.resolve("namespace:category/tag-name");
+```
+
+**25. How do you read tags from a specific Resource (not a Page)?**
 ```java
 TagManager tagManager = resolver.adaptTo(TagManager.class);
-Tag tag = tagManager.resolve("my-namespace:products/electronics");
+Tag[] tags = tagManager.getTags(resource);
 ```
 
-**Q15: How do you find all pages associated with a specific Tag?**
+**26. How do you get the localized title of a tag?**
 ```java
-TagManager tagManager = resolver.adaptTo(TagManager.class);
-RangeIterator<Resource> results = tagManager.find("/content/cq:tags/default/my-tag", new String[]{"/content/my-site"});
+String localTitle = tag.getLocalizedTitle(Locale.GERMANY);
 ```
 
-**Q16: How do you get a tag title in a specific language (Localization)?**
+**27. How do you find all pages that have a specific Tag?**
 ```java
-String deTitle = tag.getLocalizedTitle(Locale.GERMAN);
+RangeIterator<Resource> list = tagManager.find("/content/cq:tags/default/my-tag", new String[]{"/content/my-site"});
+```
+
+**28. How do you get the ID of a tag?**
+```java
+String id = tag.getTagID();
+```
+
+**29. How do you get the parent tag of a specific tag?**
+```java
+Tag parentTag = tag.getParent();
+```
+
+**30. How do you check if two tags are the same?**
+```java
+tag1.isSameTerm(tag2);
 ```
 
 ---
 
-## 4. Sling Models & Annotations
+### Part 4: HTL (Sightly) Coding
 
-**Q17: How do you inject a Page property into a Sling Model?**
-```java
-@ValueMapValue(name="jcr:title")
-private String pageTitle;
+**31. How to read a page property in HTL?**
+```html
+<h1>${properties.jcr:title}</h1>
 ```
 
-**Q18: How do you get the current page inside a Sling Model?**
+**32. How to iterate over child pages in HTL?**
+```html
+<ul data-sly-list.child="${currentPage.listChildren}">
+    <li>${child.title}</li>
+</ul>
+```
+
+**33. How to check if a property exists before showing it?**
+```html
+<p data-sly-test="${properties.description}">${properties.description}</p>
+```
+
+**34. How to call a Java Sling Model from HTL?**
+```html
+<div data-sly-use.model="com.aem.models.MyModel">
+    ${model.myData}
+</div>
+```
+
+**35. How to format a date in HTL?**
+```html
+${'yyyy-MM-dd' @ format=currentPage.lastModified}
+```
+
+**36. How to include a client library?**
+```html
+<sly data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html">
+    <sly data-sly-call="${clientlib.js @ categories='my.category'}"/>
+</sly>
+```
+
+**37. How to join an array into a string in HTL?**
+```html
+${properties.myArray @ join=', '}
+```
+
+**38. How to render raw HTML (dangerous)?**
+```html
+${properties.richText @ context='html'}
+```
+
+**39. How to use a ternary operator in HTL?**
+```html
+<div class="${properties.active ? 'is-active' : 'is-hidden'}"></div>
+```
+
+**40. How to include another resource/component in HTL?**
+```html
+<sly data-sly-resource="${'path/to/resource' @ resourceType='my/type'}"/>
+```
+
+---
+
+### Part 5: Sling Models (Logic)
+
+**41. How to inject a Page Property?**
+```java
+@ValueMapValue(name="jcr:title")
+private String title;
+```
+
+**42. How to inject the current Page?**
 ```java
 @ScriptVariable
 private Page currentPage;
 ```
 
-**Q19: How do you inject an OSGi Service?**
+**43. How to inject a Service into a Sling Model?**
 ```java
 @OSGiService
 private MyService myService;
 ```
 
-**Q20: What is the purpose of `@PostConstruct`?**
-It is used to execute initialization logic after all fields have been injected.
-
-**Q21: How to make all field injections optional by default?**
+**44. How to inject the Resource Resolver?**
 ```java
-@Model(adaptables = Resource.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)
+@SlingObject
+private ResourceResolver resolver;
 ```
+
+**45. What is `@PostConstruct`?**
+It's a method that runs after all injections are finished to initialize logic.
+
+**46. How to adapt from Request vs Resource?**
+`@Model(adaptables = {SlingHttpServletRequest.class, Resource.class})`
+
+**47. How to get all children of a resource in a Sling Model?**
+```java
+@ChildResource
+private List<Resource> children;
+```
+
+**48. How to use `@Self`?**
+Injects the adaptable itself (e.g., the current Resource).
+
+**49. How to mark a field as Optional?**
+`@DefaultInjectionStrategy(DefaultInjectionStrategy.OPTIONAL)` at the class level.
+
+**50. How to name a model for HTL?**
+`@Model(adaptables = Resource.class, adapters = MyInterface.class, resourceType = "my/comp")`
 
 ---
 
-## 5. HTL (Sightly) Logic
+### Part 6: QueryBuilder & Search
 
-**Q22: How do you loop through a list of items?**
-```html
-<ul data-sly-list.item="${model.items}">
-    <li>${item}</li>
-</ul>
+**51. How to search for pages under a path?**
+`path=/content/we-retail`
+
+**52. How to search by property value?**
+`property=jcr:title`, `property.value=Home`
+
+**53. How to search for specific tags?**
+`tagid=namespace:tag`, `tagid.property=jcr:content/cq:tags`
+
+**54. How to sort results by date?**
+`orderby=@jcr:content/jcr:lastModified`, `orderby.sort=desc`
+
+**55. How to paginate (limit/offset)?**
+`p.limit=10`, `p.offset=0`
+
+**56. How to search for specific resource types?**
+`type=cq:Page`
+
+**57. How to execute a query in Java?**
+```java
+SearchResult result = queryBuilder.createQuery(PredicateGroup.create(map), session).getResult();
 ```
 
-**Q23: How do you show a div only if a property exists?**
-```html
-<div data-sly-test="${properties.description}">
-    ${properties.description}
-</div>
-```
+**58. How to get the total number of matches?**
+`result.getTotalMatches()`
 
-**Q24: How do you format a date in HTL?**
-```html
-<p>${'yyyy-MM-dd' @ format=currentPage.lastModified}</p>
-```
+**59. How to find all images?**
+`type=dam:Asset`, `property=jcr:content/metadata/dc:format`, `property.value=image/jpeg`
 
-**Q25: How do you call a Sling Model from HTL?**
-```html
-<div data-sly-use.model="com.package.MyModel">
-    ${model.someData}
-</div>
-```
-
-**Q26: How do you include a client library in HTL?**
-```html
-<sly data-sly-use.lib="/libs/granite/sightly/templates/clientlib.html">
-    <sly data-sly-call="${lib.js @ categories='my-app.base'}"/>
-</sly>
-```
+**60. Difference between QueryBuilder and JCR-SQL2?**
+QueryBuilder is a Java API wrapper; JCR-SQL2 is a SQL-like string query.
 
 ---
 
-## 6. QueryBuilder & Search
+### Part 7: Servlets & Request Handling
 
-**Q27: How do you find all pages under `/content/site` with template `T1`?**
-```properties
-path=/content/site
-type=cq:Page
-1_property=jcr:content/cq:template
-1_property.value=/conf/site/settings/wcm/templates/T1
-```
+**61. How to register a servlet by Resource Type?**
+`@Component(service=Servlet.class, property={"sling.servlet.resourceTypes=my/type", "sling.servlet.methods=GET"})`
 
-**Q28: How do you sort query results by last modified date?**
-```properties
-orderby=@jcr:content/jcr:lastModified
-orderby.sort=desc
-```
+**62. Difference between `SlingSafeMethodsServlet` and `SlingAllMethodsServlet`?**
+Safe = Read only (GET). All = Read/Write (POST, PUT, DELETE).
 
-**Q29: How do you implement pagination in QueryBuilder?**
-```properties
-p.offset=0
-p.limit=10
-```
+**63. How to get parameters from a request?**
+`request.getParameter("myParam")`
 
----
+**64. How to write a JSON response?**
+`response.setContentType("application/json"); response.getWriter().write("{\"key\":\"val\"}");`
 
-## 7. Servlets & OSGi Services
+**65. How to get the Resource from the current Request?**
+`request.getResource()`
 
-**Q30: Difference between `SlingSafeMethodsServlet` and `SlingAllMethodsServlet`?**
-`Safe` is for Read (GET), `All` is for Write (POST/PUT/DELETE).
+**66. What is a "Selector" in AEM?**
+A part of the URL (e.g., `page.mobile.html` - `mobile` is the selector).
 
-**Q31: How to register a servlet by Resource Type?**
-```java
-@Component(service = Servlet.class, property = {
-    "sling.servlet.resourceTypes=my-project/components/page",
-    "sling.servlet.selectors=data",
-    "sling.servlet.extensions=json",
-    "sling.servlet.methods=GET"
-})
-```
+**67. How to get selectors in a Servlet?**
+`request.getRequestPathInfo().getSelectors()`
 
-**Q32: How do you get the ResourceResolver in a Service?**
-Use `ResourceResolverFactory.getServiceResourceResolver(authInfo)`.
+**68. How to get the extension?**
+`request.getRequestPathInfo().getExtension()`
+
+**69. How to redirect in a servlet?**
+`response.sendRedirect("/content/other.html")`
+
+**70. What is a Request Filter?**
+A class that intercepts requests before they hit the servlet (using `@SlingServletFilter`).
 
 ---
 
-## 8. JCR & Node API
+### Part 8: OSGi & Services
 
-**Q33: How to set a property on a Node?**
-```java
-Node node = resource.adaptTo(Node.class);
-node.setProperty("myProp", "Hello World");
-session.save();
+**71. How to define an OSGi Service?**
+`@Component(service = MyService.class)`
+
+**72. How to create an OSGi Config field?**
+Use an `@ObjectClassDefinition` annotated interface.
+
+**73. What is the lifecycle of an OSGi bundle?**
+Installed -> Resolved -> Starting -> Active -> Stopping -> Uninstalled.
+
+**74. How to use `@Reference`?**
+To inject one OSGi service into another.
+
+**75. What is an OSGi Alias/Target?**
+Used to filter which specific implementation of a service to inject.
+
+---
+
+### Part 9: JCR & Nodes (Low Level)
+
+**81. How to get a Node from a Resource?**
+`Node node = resource.adaptTo(Node.class)`
+
+**82. How to add a child node?**
+`node.addNode("myChild", "nt:unstructured")`
+
+**83. How to set a property on a Node?**
+`node.setProperty("myProp", "value")`
+
+**84. How to save changes to the JCR?**
+`session.save()`
+
+**85. What is the difference between `nt:unstructured` and `cq:Page`?**
+`nt:unstructured` is a generic node; `cq:Page` is a specific AEM structure requiring a `jcr:content` child.
+
+---
+
+### Part 10: Logic & JavaScript (Nested Click / UI)
+
+**91. How to read a data attribute from a clicked element?**
+```javascript
+const tags = event.target.dataset.tags;
 ```
 
-**Q34: How to create a child node?**
-```java
-node.addNode("childNodeName", "nt:unstructured");
+**92. How to implement Event Delegation for nested pages?**
+```javascript
+document.querySelector('.parent').addEventListener('click', (e) => {
+    if(e.target.matches('.child-page')) { 
+        // Logic 
+    }
+});
 ```
+
+**93. How to fetch AEM component data as JSON?**
+Append `.infinity.json` or `.model.json` to the URL.
+
+**94. How to handle "Load More" for child pages?**
+Use a Servlet with `offset` and `limit` parameters called via AJAX.
+
+**95. How to get the path of an image dropped into a dialog?**
+Read the `fileReference` property from the component's node.
 
