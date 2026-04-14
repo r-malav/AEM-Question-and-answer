@@ -1,4 +1,4 @@
-This is the **Master AEM Interview Prep Sheet**, consolidating all discussed topics: **Sling Models, Servlets, OSGi Services, Service Users, JCR (Node vs Resource), and AEM Cloud Architecture**.
+This is the all discussed topics: **Sling Models, Servlets, OSGi Services, Service Users, JCR (Node vs Resource), and AEM Cloud Architecture**.
 
 ---
 
