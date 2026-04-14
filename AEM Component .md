@@ -11,10 +11,12 @@ This guide covers the core concepts of **AEM Components**, **Dialogs**, **Design
 *   **`componentGroup`**: Categorizes components in the Sidekick/Asset finder.
 
 ---
-
 ### **Part 2: 50 Questions & Answers**
+---
 
+---
 #### **Component Basics (1-10)**
+---
 1.  **What is an AEM Component?**
 <br />Answer  :  A reusable unit of logic and style used to build web pages.
 2.  **What is the node type of a component?**
@@ -36,7 +38,10 @@ This guide covers the core concepts of **AEM Components**, **Dialogs**, **Design
 10. **What is the use of `componentGroup`?**
 <br />Answer  :  It defines the tab name in the authoring "Insert" dialog.
 
+---
 #### **Touch UI Dialogs (cq:dialog) (11-20)**
+---
+
 11. **What technology is used for Touch UI dialogs?**
 <br />Answer  :  Granite UI (based on Coral UI).
 12. **Where is data saved when an author submits a dialog?**
@@ -58,7 +63,10 @@ This guide covers the core concepts of **AEM Components**, **Dialogs**, **Design
 20. **Can you use HTL inside a dialog?**
 <br />Answer  :  No. Dialogs are rendered using Granite UI components (XML-based).
 
+---
 #### **Design Dialogs & Policies (21-30)**
+---
+
 21. **What is a `cq:design_dialog`?**
 <br />Answer  :  A dialog used to configure global component settings (e.g., max images allowed).
 22. **Where is Design Dialog data stored in Static Templates?**
@@ -80,7 +88,10 @@ This guide covers the core concepts of **AEM Components**, **Dialogs**, **Design
 30. **Is `design_dialog` still used in AEM Cloud?**
 <br />Answer  :  Rarely. Policies are the standard for AEMaaCS.
 
+---
 #### **cq:editConfig (31-40)**
+---
+
 31. **What is `cq:editConfig`?**
 <br />Answer  :  A node that defines the authoring behavior of a component.
 32. **What are the common properties of `cq:editConfig`?**
@@ -101,6 +112,8 @@ This guide covers the core concepts of **AEM Components**, **Dialogs**, **Design
 <br />Answer  :  It opens the dialog as a separate window instead of an inline overlay (Legacy/Classic UI).
 40. **How do you restrict where a component can be dropped?**
 <br />Answer  :  Use the `allowedChildren` and `allowedParents` properties or Template Policies.
+
+---
 
 #### **Advanced & Scenario-Based (41-50)**
 41. **What is a Proxy Component?**
