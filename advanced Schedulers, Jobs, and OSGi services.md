@@ -1,13 +1,3 @@
-This is a master list of **100+ AEM Interview Questions and Answers** formatted as a `README.md`. It covers everything from basic Page APIs to advanced Schedulers, Jobs, and OSGi services.
-
----
-
-# AEM Technical Interview Master Guide (100+ Q&A)
-
-This document contains technical coding scenarios and conceptual questions for AEM developers.
-
----
-
 ## 1. Page & Resource API (Traversal & Properties)
 
 **Q1: How to read a property "jcr:title" from a resource?**<br />Answer :
