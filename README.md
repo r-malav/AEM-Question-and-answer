@@ -408,12 +408,12 @@ document.querySelector('.parent').addEventListener('click', (e) => {
 });
 ```
 
-**93. How to fetch AEM component data as JSON?**
+**93. How to fetch AEM component data as JSON?**  
 Append `.infinity.json` or `.model.json` to the URL.
 
-**94. How to handle "Load More" for child pages?**
+**94. How to handle "Load More" for child pages?**       
 Use a Servlet with `offset` and `limit` parameters called via AJAX.
 
-**95. How to get the path of an image dropped into a dialog?**
+**95. How to get the path of an image dropped into a dialog?**        
 Read the `fileReference` property from the component's node.
 
