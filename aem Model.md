@@ -1,6 +1,3 @@
-Sling Models are annotation-driven Java POJOs (Plain Old Java Objects) used in AEM to map JCR properties and OSGi services directly into Java fields. They are the modern standard for backend logic in AEM components.
-
----
 
 ### **Part 1: All AEM Sling Model Annotations Explained**
 
