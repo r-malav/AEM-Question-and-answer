@@ -28,7 +28,7 @@ This is the all discussed topics: **Sling Models, Servlets, OSGi Services, Servi
 23. **Headless support**<br />Answer  :   Use `@Exporter` and `.model.json` extension.
 24. **Lombok with Models**<br />Answer  :   Yes, use `@Getter` to reduce code.
 25. **Unit Testing**<br />Answer  :   Use AEM Mocks.
-*(Questions 26-50 follow similar patterns of advanced usage, troubleshooting, and specific injector roles like @RequestAttribute and @ResourcePath).*
+
 
 ---
 
@@ -53,7 +53,7 @@ This is the all discussed topics: **Sling Models, Servlets, OSGi Services, Servi
 18. **Bundle Lifecycle**<br />Answer  :   Installed, Resolved, Starting, Active, Stopping, Uninstalled.
 19. **`@Activate`**<br />Answer  :   Runs when service starts.
 20. **`@Deactivate`**<br />Answer  :   Runs when service stops (clean up resources).
-*(Questions 21-50 cover Configuration Admin, Factory Configs, and troubleshooting circular references).*
+
 
 ---
 
@@ -78,7 +78,6 @@ This is the all discussed topics: **Sling Models, Servlets, OSGi Services, Servi
 18. **`jcr:all`**<br />Answer  :   Full permissions on a node.
 19. **Move node**<br />Answer  :   Needs `delete` on source and `add_node` on destination.
 20. **System User node type**<br />Answer  :   `rep:SystemUser`.
-*(Questions 21-50 cover troubleshooting RepoInit, checking permissions programmatically, and multi-tenant security).*
 
 ---
 
