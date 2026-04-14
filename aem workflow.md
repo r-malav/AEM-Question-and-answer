@@ -305,33 +305,42 @@ This allows subsequent steps to read this value.
 **Answer:** The workflow instance remains in the JCR. Once the pod comes back online, the **Workflow Engine** checks for "In Progress" tasks. If the task was an automated process, it may attempt to restart the step (which is why **Idempotency** is critical).
 
 **85. How do you implement "Dynamic Routing" in a workflow based on external API data?**
+
 **Answer:** Use a **Process Step** that calls the API and writes the result into the **Workflow Metadata**. Then, use an **OR-Split** (Decision step) that reads that metadata to decide which path to take.
 
 **86. How do you manage Workflow Model versioning in a CI/CD pipeline?**
+
 **Answer:** Store Workflow Models as XML files in the codebase (under `/conf` or `/var`). Use a naming convention for versions. When deploying, the new model is uploaded, and you can either migrate existing instances or let them finish on the old version.
 
 **87. What is a "Dead-Letter Queue" concept in AEM Workflows?**
+
 **Answer:** While AEM doesn't have a formal DLQ, you can implement one by creating a specific workflow model called "Workflow Error Handler." Any process that fails after $X$ retries programmatically moves its payload to this "Error Model" for manual intervention.
 
 **88. How do you debug a "Permission Denied" error in a workflow that works in Dev but fails in Prod?**
+
 **Answer:** 
 1. Check the **Service User** mapping in the Prod environment.
 2. Compare the ACLs of the service user in Dev vs Prod using the **User Admin** console.
 3. Ensure the `repoinit` script was correctly applied during the Cloud deployment.
 
 **89. How do you implement a "Global Workflow Variable" that can be changed without redeploying code?**
+
 **Answer:** Store the variable in an **OSGi Configuration** or a **Sling Settings** node (e.g., `/conf/global/settings`). In the `WorkflowProcess`, inject the OSGi configuration to get the current value.
 
 **90. What is the impact of "JCR Session Refresh" on workflow performance?**
+
 **Answer:** If a workflow is modifying a node and another process refreshes the session, the workflow might see "stale" data. Use `session.refresh(false)` to update the session with the latest JCR state without losing local modifications.
 
 **91. How do you prevent "Workflow Storms" (thousands of workflows starting at once)?**
+
 **Answer:** Use a **Sling Job Queue** as a buffer. Instead of the Launcher starting the workflow directly, the Launcher adds a Job to a queue. The queue is configured with `maxParallel = 5`, ensuring only 5 workflows run at a time.
 
 **92. Explain the architecture of "Asset Compute Service" in relation to Workflows.**
+
 **Answer:** In AEMaaCS, the workflow doesn't process the image locally. It sends a request to the **Asset Compute Service (ACS)**. ACS processes the image in a separate serverless container and sends a notification back to AEM. AEM then updates the asset metadata. This keeps the AEM JVM stable.
 
 **93. How do you handle "Circular Logic" when two different workflow models trigger each other via Launchers?**
+
 **Answer:** This creates an infinite loop. 
 **Solution:** Add a "Marker Property" (e.g., `workflowProcessed = true`) to the node. In the Launcher configuration, add a condition that the workflow should only start if `workflowProcessed != true`.
 
