@@ -288,121 +288,121 @@ end
 Here are the questions and answers from the file:
 
 **Q1: How do you read page properties in a Sling Model?**
-*   **Answer:** Use `@ValueMapValue` in a Sling Model. Properties are stored under the `jcr:content` node and accessible via `ValueMap`.
-*   **Tip:** `page.getProperties()` returns the ValueMap of `jcr:content` node directly — same as `resource.getValueMap()` on `jcr:content`.
+**Answer:** Use `@ValueMapValue` in a Sling Model. Properties are stored under the `jcr:content` node and accessible via `ValueMap`.
+**Tip:** `page.getProperties()` returns the ValueMap of `jcr:content` node directly — same as `resource.getValueMap()` on `jcr:content`.
 
 **Q2: How do you read all direct child pages of a page?**
-*   **Answer:** Use `Page.listChildren()` with a `PageFilter`. Wrap the iterator in a list for easy use in HTL.
-*   **Tip:** `PageFilter(false, true)` — first arg: showHidden, second: filterInvalid. Use `new PageFilter()` for default (no hidden, valid only).
+**Answer:** Use `Page.listChildren()` with a `PageFilter`. Wrap the iterator in a list for easy use in HTL.
+**Tip:** `PageFilter(false, true)` — first arg: showHidden, second: filterInvalid. Use `new PageFilter()` for default (no hidden, valid only).
 
 **Q3: How do you read ALL nested/recursive child pages (deep traversal)?**
-*   **Answer:** Use `listChildren(filter, deep=true)` for a flat iterator of all descendants, or write a recursive method for tree structure.
-*   **Tip:** Add a `maxDepth` parameter to recursive method to avoid OOM on large content trees. Depth limit of 3-4 is safe for navigation.
+**Answer:** Use `listChildren(filter, deep=true)` for a flat iterator of all descendants, or write a recursive method for tree structure.
+**Tip:** Add a `maxDepth` parameter to recursive method to avoid OOM on large content trees. Depth limit of 3-4 is safe for navigation.
 
 **Q4: How do you find pages by tag using TagManager?**
-*   **Answer:** Use `TagManager.find()` to get a `RangeIterator` of resources that have a specific tag applied.
-*   **Tip:** tagId format: `namespace:category/tagname` — e.g. "properties:genre/action". Check `/content/cq:tags` in CRXDE for IDs.
+**Answer:** Use `TagManager.find()` to get a `RangeIterator` of resources that have a specific tag applied.
+**Tip:** tagId format: `namespace:category/tagname` — e.g. "properties:genre/action". Check `/content/cq:tags` in CRXDE for IDs.
 
 **Q5: How do you read the tags applied to a page?**
-*   **Answer:** Tags are stored as `String[]` in `cq:tags` property on `jcr:content`. Use `TagManager.getTags()` to get Tag objects with titles.
-*   **Tip:** Pass the `jcr:content` Resource to `getTags()` — NOT the `cq:Page` node. Use `page.getContentResource()` to get `jcr:content`.
+**Answer:** Tags are stored as `String[]` in `cq:tags` property on `jcr:content`. Use `TagManager.getTags()` to get Tag objects with titles.
+**Tip:** Pass the `jcr:content` Resource to `getTags()` — NOT the `cq:Page` node. Use `page.getContentResource()` to get `jcr:content`.
 
 **Q6: How do you search pages by tag using QueryBuilder?**
-*   **Answer:** Use the "tagid" predicate in QueryBuilder. It searches `cq:tags` property automatically.
-*   **Tip:** Test queries at `/libs/cq/search/content/querydebug.html` on author. Use `p.guessTotal=true` for large result sets.
+**Answer:** Use the "tagid" predicate in QueryBuilder. It searches `cq:tags` property automatically.
+**Tip:** Test queries at `/libs/cq/search/content/querydebug.html` on author. Use `p.guessTotal=true` for large result sets.
 
 **Q7: What is the difference between @Inject, @ValueMapValue, and @ChildResource?**
-*   **Answer:** `@Inject` is generic and tries all injectors. `@ValueMapValue` reads from ValueMap properties. `@ChildResource` injects a child node as Resource.
-*   **Tip:** Always add `defaultInjectionStrategy=OPTIONAL` or use `@Optional` per field. Without it, missing fields make adaptation return null silently.
+**Answer:** `@Inject` is generic and tries all injectors. `@ValueMapValue` reads from ValueMap properties. `@ChildResource` injects a child node as Resource.
+**Tip:** Always add `defaultInjectionStrategy=OPTIONAL` or use `@Optional` per field. Without it, missing fields make adaptation return null silently.
 
 **Q8: How do you use @PostConstruct in a Sling Model?**
-*   **Answer:** `@PostConstruct` marks a method to run after all injections are complete. Use it for computed properties and service calls.
-*   **Tip:** Method name does not matter — only `@PostConstruct` annotation. Avoid throwing exceptions inside it; wrap in try/catch.
+**Answer:** `@PostConstruct` marks a method to run after all injections are complete. Use it for computed properties and service calls.
+**Tip:** Method name does not matter — only `@PostConstruct` annotation. Avoid throwing exceptions inside it; wrap in try/catch.
 
 **Q9: How do you traverse JCR nodes programmatically?**
-*   **Answer:** Use `Resource.getChildren()` (Sling way, preferred) or `Node.getNodes()` (JCR API). Sling approach is cleaner and resolver-aware.
-*   **Tip:** Use `resource.hasChildren()` check before iterating. For JCR, always handle `RepositoryException` and close Session in finally.
+**Answer:** Use `Resource.getChildren()` (Sling way, preferred) or `Node.getNodes()` (JCR API). Sling approach is cleaner and resolver-aware.
+**Tip:** Use `resource.hasChildren()` check before iterating. For JCR, always handle `RepositoryException` and close Session in finally.
 
 **Q10: How do you use QueryBuilder to search pages by template?**
-*   **Answer:** Use "property" predicate to match `jcr:content/cq:template`. Combine multiple predicates for complex queries.
-*   **Tip:** Number prefix (`1_property`, `2_property`) groups multiple property predicates with AND logic. Use `group.p.or=true` for OR.
+**Answer:** Use "property" predicate to match `jcr:content/cq:template`. Combine multiple predicates for complex queries.
+**Tip:** Number prefix (`1_property`, `2_property`) groups multiple property predicates with AND logic. Use `group.p.or=true` for OR.
 
 **Q11: How do you read a multifield (multi-value) from a component dialog?**
-*   **Answer:** Simple multifields store as `String[]`. Composite multifields (nested fields) store as child nodes under a sub-node.
-*   **Tip:** AEM 6.3+ Coral UI multifield always uses child nodes (composite). Older Touch UI may use flat arrays. Check CRXDE to confirm structure.
+**Answer:** Simple multifields store as `String[]`. Composite multifields (nested fields) store as child nodes under a sub-node.
+**Tip:** AEM 6.3+ Coral UI multifield always uses child nodes (composite). Older Touch UI may use flat arrays. Check CRXDE to confirm structure.
 
 **Q12: How do you create an OSGi service with configuration?**
-*   **Answer:** Use `@Component` + `@Designate` annotations. Configuration interface uses `@ObjectClassDefinition`. `@Activate` receives the config on start and update.
-*   **Tip:** `@Modified` lets config update at runtime without bundle restart. Store config in `/apps/myapp/config/com.myapp.MyServiceImpl.cfg.json`.
+**Answer:** Use `@Component` + `@Designate` annotations. Configuration interface uses `@ObjectClassDefinition`. `@Activate` receives the config on start and update.
+**Tip:** `@Modified` lets config update at runtime without bundle restart. Store config in `/apps/myapp/config/com.myapp.MyServiceImpl.cfg.json`.
 
 **Q13: How do you create an OSGi EventHandler for content changes?**
-*   **Answer:** Implement `EventHandler` interface and register with `EVENT_TOPIC` and `EVENT_FILTER` properties to listen to Sling resource events.
-*   **Tip:** `EVENT_FILTER` uses LDAP syntax. Example: `(path=/content/mysite/*)` OR `(|(path=/content/a/*)(path=/content/b/*))` for multiple paths.
+**Answer:** Implement `EventHandler` interface and register with `EVENT_TOPIC` and `EVENT_FILTER` properties to listen to Sling resource events.
+**Tip:** `EVENT_FILTER` uses LDAP syntax. Example: `(path=/content/mysite/*)` OR `(|(path=/content/a/*)(path=/content/b/*))` for multiple paths.
 
 **Q14: How do you create a custom Workflow Process step?**
-*   **Answer:** Implement `WorkflowProcess` and register as OSGi service. The `process.label` property sets the display name in workflow model editor.
-*   **Tip:** Use service resource resolver, not admin resolver. Configure subservice mapping in Apache Sling Service User Mapper Service.
+**Answer:** Implement `WorkflowProcess` and register as OSGi service. The `process.label` property sets the display name in workflow model editor.
+**Tip:** Use service resource resolver, not admin resolver. Configure subservice mapping in Apache Sling Service User Mapper Service.
 
 **Q15: How do you implement a custom Sling Servlet?**
-*   **Answer:** Use `@SlingServletResourceTypes` to bind servlet to a resource type + extension + selector. Extend `SlingAllMethodsServlet` or `SlingSafeMethodsServlet`.
-*   **Tip:** Access URL: `/content/mysite/search.results.json?q=keyword`. Resource of type `myapp/components/search` must exist at that path.
+**Answer:** Use `@SlingServletResourceTypes` to bind servlet to a resource type + extension + selector. Extend `SlingAllMethodsServlet` or `SlingSafeMethodsServlet`.
+**Tip:** Access URL: `/content/mysite/search.results.json?q=keyword`. Resource of type `myapp/components/search` must exist at that path.
 
 **Q16: How do you do CRUD operations using ResourceResolver?**
-*   **Answer:** Use `resolver.create()` for new nodes, `ModifiableValueMap` for updates, `resolver.delete()` for removal. Always call `resolver.commit()`.
-*   **Tip:** `ModifiableValueMap` returns null if resource is read-only or user has no write permission. Always null-check before `.put()`.
+**Answer:** Use `resolver.create()` for new nodes, `ModifiableValueMap` for updates, `resolver.delete()` for removal. Always call `resolver.commit()`.
+**Tip:** `ModifiableValueMap` returns null if resource is read-only or user has no write permission. Always null-check before `.put()`.
 
 **Q17: What is the difference between cq:Page, nt:unstructured, and sling:Folder?**
-*   **Answer:** `cq:Page` = AEM page node (has `jcr:content` child). `nt:unstructured` = flexible generic node used for component data. `sling:Folder` = ordered container for assets/content.
-*   **Tip:** Never create `cq:Page` nodes manually — always use `PageManager.create()`. It sets up `jcr:content`, template association, etc. correctly.
+**Answer:** `cq:Page` = AEM page node (has `jcr:content` child). `nt:unstructured` = flexible generic node used for component data. `sling:Folder` = ordered container for assets/content.
+**Tip:** Never create `cq:Page` nodes manually — always use `PageManager.create()`. It sets up `jcr:content`, template association, etc. correctly.
 
 **Q18: How do you trigger replication (publish/unpublish) from code?**
-*   **Answer:** Inject the `Replicator` service and call `replicate()` with the action type. Use a service user with replicate privilege.
-*   **Tip:** Service user needs "replicate" JCR privilege at `/content`. Grant via Access Control Editor in Security section of CRXDE.
+**Answer:** Inject the `Replicator` service and call `replicate()` with the action type. Use a service user with replicate privilege.
+**Tip:** Service user needs "replicate" JCR privilege at `/content`. Grant via Access Control Editor in Security section of CRXDE.
 
 **Q19: How do you write an HTL template with data-sly-use?**
-*   **Answer:** `data-sly-use` instantiates a Sling Model by class name and binds it to a local variable. Access model methods via `${variable.method}`.
-*   **Tip:** Context types: `text` (default), `html`, `uri`, `attribute`, `number`, `unsafe`. Always set context for links: `${path @ context="uri"}`.
+**Answer:** `data-sly-use` instantiates a Sling Model by class name and binds it to a local variable. Access model methods via `${variable.method}`.
+**Tip:** Context types: `text` (default), `html`, `uri`, `attribute`, `number`, `unsafe`. Always set context for links: `${path @ context="uri"}`.
 
 **Q20: How do you use HTL templates (data-sly-template / data-sly-call)?**
-*   **Answer:** Define reusable markup blocks with `data-sly-template` in a shared file, then call them with `data-sly-call` from any component.
-*   **Tip:** Templates cannot access outer scope variables — all data must be passed as parameters. This makes them predictable and testable.
+**Answer:** Define reusable markup blocks with `data-sly-template` in a shared file, then call them with `data-sly-call` from any component.
+**Tip:** Templates cannot access outer scope variables — all data must be passed as parameters. This makes them predictable and testable.
 
 **Q21: How do you start an AEM workflow from Java code?**
-*   **Answer:** Use `WorkflowService` to get a `WorkflowSession`, then create `WorkflowData` with the payload path and start the workflow.
-*   **Tip:** `WorkflowSession` is request-scoped — create it fresh each time. Do not inject or cache it as a field.
+**Answer:** Use `WorkflowService` to get a `WorkflowSession`, then create `WorkflowData` with the payload path and start the workflow.
+**Tip:** `WorkflowSession` is request-scoped — create it fresh each time. Do not inject or cache it as a field.
 
 **Q22: How do you build a breadcrumb component in AEM?**
-*   **Answer:** Walk up the page ancestry using `Page.getParent()` from the current page to the root level. Reverse to get root-to-current order.
-*   **Tip:** `startLevel=2` starts from language root (`/content/mysite/en`). Use `page.getNavigationTitle()` — it falls back to `getTitle()` if null.
+**Answer:** Walk up the page ancestry using `Page.getParent()` from the current page to the root level. Reverse to get root-to-current order.
+**Tip:** `startLevel=2` starts from language root (`/content/mysite/en`). Use `page.getNavigationTitle()` — it falls back to `getTitle()` if null.
 
 **Q23: How do you build a navigation component that reads the site tree?**
-*   **Answer:** Get the navigation root page, call `listChildren()` with `PageFilter`, and build a recursive tree of `NavItems` with active state tracking.
-*   **Tip:** `isActive` = current page is a descendant of nav item. `isCurrent` = nav item IS the current page. Both needed for CSS class logic.
+**Answer:** Get the navigation root page, call `listChildren()` with `PageFilter`, and build a recursive tree of `NavItems` with active state tracking.
+**Tip:** `isActive` = current page is a descendant of nav item. `isCurrent` = nav item IS the current page. Both needed for CSS class logic.
 
 **Q24: How do you create a custom Oak/Lucene index for fast search?**
-*   **Answer:** Create an `oak:QueryIndexDefinition` node under `/oak:index`. Set `type=lucene`, define `indexRules` for the node types and properties to index.
-*   **Tip:** Set `@reindex=true` ONLY when you change the index definition. It rebuilds from scratch and is expensive.
+**Answer:** Create an `oak:QueryIndexDefinition` node under `/oak:index`. Set `type=lucene`, define `indexRules` for the node types and properties to index.
+**Tip:** Set `@reindex=true` ONLY when you change the index definition. It rebuilds from scratch and is expensive.
 
 **Q25: How do you implement i18n (translation) in AEM?**
-*   **Answer:** Use `I18n` class with the Sling request to look up translated keys. Dictionary files (.json) live under `/apps/myapp/i18n/` per locale.
-*   **Tip:** AEM merges dictionaries from `/libs` and `/apps` at the same key path. Your `/apps` dictionary overrides `/libs` for the same keys.
+**Answer:** Use `I18n` class with the Sling request to look up translated keys. Dictionary files (.json) live under `/apps/myapp/i18n/` per locale.
+**Tip:** AEM merges dictionaries from `/libs` and `/apps` at the same key path. Your `/apps` dictionary overrides `/libs` for the same keys.
 
 **Q26: How do you use Context-Aware Configuration (CAConfig) in AEM?**
-*   **Answer:** Define a `@interface` for config structure, inject `ConfigurationResolver`, call `.get(resource).as(MyConfig.class)`. Config stored at `/conf` path.
-*   **Tip:** Config resolution walks UP the content tree from current resource path to `/conf/global` then defaults. More specific path = higher priority.
+**Answer:** Define a `@interface` for config structure, inject `ConfigurationResolver`, call `.get(resource).as(MyConfig.class)`. Config stored at `/conf` path.
+**Tip:** Config resolution walks UP the content tree from current resource path to `/conf/global` then defaults. More specific path = higher priority.
 
 **Q27: How do you create a Sling Scheduled Job in AEM?**
-*   **Answer:** Implement `Runnable` and annotate with `@Component` using scheduler properties, or implement `ScheduledJobConsumer` for async jobs.
-*   **Tip:** `PROPERTY_SCHEDULER_CONCURRENT=false` prevents overlapping runs. View/trigger jobs at `/system/console/scheduler` in OSGi console.
+**Answer:** Implement `Runnable` and annotate with `@Component` using scheduler properties, or implement `ScheduledJobConsumer` for async jobs.
+**Tip:** `PROPERTY_SCHEDULER_CONCURRENT=false` prevents overlapping runs. View/trigger jobs at `/system/console/scheduler` in OSGi console.
 
 **Q28: How do you work with DAM Assets (read metadata, renditions)?**
-*   **Answer:** Adapt a Resource to `Asset` interface. Access metadata via `getMetadata()`, get renditions via `getRenditions()` or `getRendition(name)`.
-*   **Tip:** Always close `InputStream` from renditions in a finally block. Never load full binary into memory for large assets — stream it.
+**Answer:** Adapt a Resource to `Asset` interface. Access metadata via `getMetadata()`, get renditions via `getRenditions()` or `getRendition(name)`.
+**Tip:** Always close `InputStream` from renditions in a finally block. Never load full binary into memory for large assets — stream it.
 
 **Q29: How does Sling URL decomposition work?**
-*   **Answer:** Sling parses URLs into: resource path, selectors, extension, and suffix. Each part maps to different servlet/script resolution logic.
-*   **Tip:** Selectors are checked LEFT to RIGHT for script resolution. Most specific match wins. Longer selector chains take priority.
+**Answer:** Sling parses URLs into: resource path, selectors, extension, and suffix. Each part maps to different servlet/script resolution logic.
+**Tip:** Selectors are checked LEFT to RIGHT for script resolution. Most specific match wins. Longer selector chains take priority.
 
 **Q30: How do you implement a Sling Model Exporter for JSON API?**
-*   **Answer:** Add `@Exporter(name="jackson")` to Sling Model. Access via `.model.json` URL suffix. Used for SPA Editor / Content Services.
-*   **Tip:** `ComponentExporter.getExportedType()` must return the same string as the `resourceType`. Required for SPA page model API to work correctly.
+**Answer:** Add `@Exporter(name="jackson")` to Sling Model. Access via `.model.json` URL suffix. Used for SPA Editor / Content Services.
+**Tip:** `ComponentExporter.getExportedType()` must return the same string as the `resourceType`. Required for SPA page model API to work correctly.
