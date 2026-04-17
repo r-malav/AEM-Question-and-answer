@@ -74,8 +74,9 @@ public void printAllPaths(Page page) {
     }
 }
 
+```
 
-----
+```
 
    public List<String> getAllChildPages(ResourceResolver resolver, String pagePath) {
 
