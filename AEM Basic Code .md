@@ -73,6 +73,47 @@ public void printAllPaths(Page page) {
         printAllPaths(child); // Recursive call
     }
 }
+
+
+----
+
+   public List<String> getAllChildPages(ResourceResolver resolver, String pagePath) {
+
+        List<String> result = new ArrayList<>();
+
+        // ✅ Step 1: Get Resource
+        Resource resource = resolver.getResource(pagePath);
+
+        if (resource != null) {
+
+            // ✅ Step 2: Convert Resource → Page
+            Page page = resource.adaptTo(Page.class);
+
+            if (page != null) {
+
+                // ✅ Step 3: Traverse children
+                collectChildren(page, result);
+            }
+        }
+
+        return result;
+    }
+
+    private void collectChildren(Page page, List<String> list) {
+
+        Iterator<Page> children = page.listChildren();
+
+        while (children.hasNext()) {
+
+            Page child = children.next();
+
+            list.add(child.getPath());
+
+            // ✅ Recursive call
+            collectChildren(child, list);
+        }
+    }
+}
 ```
 
 **13. How do you list children while filtering out hidden pages<br />Answer  :  
