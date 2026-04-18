@@ -39,7 +39,7 @@ public @interface SchedulerConfig {
     @AttributeDefinition(name = "Scheduler Name")
     String scheduler_name() default "Custom Cron Scheduler";
 }
-```
+
 
 **2. Scheduler Implementation:**
 ```java
@@ -69,7 +69,7 @@ public class MySimpleScheduler implements Runnable {
     }
 }
 
-
+```
 ---
 
 ### Part 3: 50 Interview Questions & Answers
