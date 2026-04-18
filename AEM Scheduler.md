@@ -88,7 +88,7 @@ public class MySimpleScheduler implements Runnable {
 9. **How do you make a scheduler run only on the Author instance?**<br />Answer  : By using OSGi configurations targeted at the `author` runmode.
 10. **How do you prevent a scheduler from running on all nodes in a cluster?**<br />Answer  :  Set the property `scheduler.runOn = LEADER`.
 
-```
+```java
     @Component(service = Runnable.class, property = {
     "scheduler.expression=0 0 1 * * ?",
     "scheduler.concurrent=false",
