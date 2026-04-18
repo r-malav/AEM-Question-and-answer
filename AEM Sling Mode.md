@@ -1,4 +1,4 @@
-
+<p align="center"> <img src="https://img.shields.io/badge/AEM-6.5-red?style=for-the-badge"> <img src="https://img.shields.io/badge/Java-17-orange?style=for-the-badge"> <img src="https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge"> <img src="https://img.shields.io/badge/Status-Active-success?style=for-the-badge"> </p> <p align="center"> 📘 Complete guide to Sling Models with interview questions & annotations </p>
 
 ### **Part 1: All Sling Model Annotations Explained**
 
