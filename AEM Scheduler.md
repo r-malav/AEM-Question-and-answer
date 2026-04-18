@@ -95,7 +95,74 @@ public class MySimpleScheduler implements Runnable {
     resolver = resolverFactory.getServiceResourceResolver(param);
     ```
 12. **Which annotation is used to link a configuration to a Scheduler?**<br />Answer  :  `@Designate(ocd = MyConfig.class)`.
-13. **Why is `Runnable` preferred over `Job`?**<br />Answer  :  It’s simpler and adheres to the Whiteboard pattern.
+13. **Why is `Runnable` preferred over `Job`?**<br />Answer  :  It’s simpler and adheres to the Whiteboard pattern.--- (The statement that **`Runnable`** is preferred over **`Job`** for basic scheduling is a standard best practice in the OSGi/Sling world. Here is the detailed explanation of why.
+
+---
+
+### 1. What is the "Whiteboard Pattern"?
+
+In traditional programming, if you want a task to run, you have to "register" it by calling a method (e.g., `scheduler.addJob(myTask)`). This creates a tight dependency between your code and the Scheduler service.
+
+In the **Whiteboard Pattern**, the process is inverted:
+*   **The Component:** Simply registers itself as a service of type `java.lang.Runnable` in the OSGi Service Registry and adds some "metadata" (properties like the Cron expression).
+*   **The Whiteboard (Sling Scheduler):** Constantly watches the Service Registry. Whenever it sees a service of type `Runnable` that has the property `scheduler.expression`, it **automatically** picks it up and starts running it.
+
+**Why this is better:**
+*   **Decoupling:** Your code doesn't need to know the `Scheduler` API exists. It just implements a standard Java `Runnable`.
+*   **Automatic Lifecycle:** If your bundle is stopped, the service is removed from the registry. The Whiteboard notices this and automatically stops the schedule. No manual cleanup code is required.
+
+---
+
+### 2. Why is it "Simpler"?
+
+Compare the code required for both:
+
+#### The `Runnable` Approach (Whiteboard)
+You only need **one** class.
+```java
+@Component(service = Runnable.class, property = { "scheduler.expression=0 0 1 * * ?" })
+public class MyTask implements Runnable {
+    @Override
+    public void run() {
+        // Your logic here
+    }
+}
+```
+
+#### The `Job` Approach (Sling Jobs)
+You usually need **two** parts: something to *add* the job to the queue and a *Consumer* to process it.
+```java
+// Part 1: The Consumer
+@Component(service = JobConsumer.class, property = { JobConsumer.PROPERTY_TOPICS + "=my/topic" })
+public class MyJobConsumer implements JobConsumer {
+    public JobResult process(Job job) {
+        // Logic here
+        return JobResult.OK;
+    }
+}
+
+// Part 2: Something else must trigger it
+jobManager.addJob("my/topic", payload);
+```
+
+---
+
+### 3. Comparison Table
+
+| Feature | **Runnable (Whiteboard)** | **Sling Job** |
+| :--- | :--- | :--- |
+| **Complexity** | Extremely Low (1 class). | Medium (Needs Topic, Consumer, and Trigger). |
+| **Persistence** | **Non-persistent.** If the server is down at 1 AM, the task is missed. | **Persistent.** If the server is down, the job waits in the queue and runs when it restarts. |
+| **Guaranteed Delivery** | No. If it fails, it waits for the next Cron trigger. | Yes. It provides "exactly-once" or "at-least-once" execution. |
+| **Overhead** | Very light. | Higher (uses JCR to store job state in `/var/eventing`). |
+| **Best Use Case** | Periodic maintenance (Sitemaps, Log cleanups, nightly syncs). | Event-driven logic (Processing an asset immediately after upload). |
+
+---
+
+### Summary: The "Rule of Thumb"
+
+*   **Use `Runnable`** when you want a simple task to run at a **specific time** (e.g., "Every night at 1 AM") and it is okay if the task is skipped once if the server is undergoing maintenance. This is the "Simpler/Whiteboard" approach.
+*   **Use `Job`** when the task **must** happen (e.g., "Send this order confirmation email"). If the server crashes, the job must stay in a queue and finish the moment the server comes back online.)
 14. **How do you register a Scheduler programmatically?**<br />Answer  :  Inject the `Scheduler` service and use the `scheduler.schedule()` method.
 15. **How do you stop a scheduler?**<br />Answer  :  Unregister the OSGi service or use `scheduler.unschedule(jobName)`.
 
