@@ -196,7 +196,7 @@ jobManager.addJob("my/topic", payload);
 #### Scenarios (With Code Snippets)
 25. **Code to schedule a job every day at 1 AM?**<br />Answer  :  `@AttributeDefinition(default = "0 0 1 * * ?")`
 26. **How to read a property from the OSGi config in the `run()` method?**<br />Answer  :  Store the config value in a private variable during `@Activate`.
-27. **How to log the start and end of a scheduler?**<br />Answer  :  ```java
+27. **How to log the start and end of a scheduler?**<br />Answer  :  <br /> ```java
     public void run() {
         long start = System.currentTimeMillis();
         // logic
@@ -204,7 +204,7 @@ jobManager.addJob("my/topic", payload);
     }
     ```
 28. **How to run a scheduler only once on activation?**<br />Answer  :  Set `scheduler.expression` to a past date or use `scheduler.schedule()` with a `ScheduleOptions` object.
-29. **How to use `ScheduleOptions`?**<br />Answer  :  ```java
+29. **How to use `ScheduleOptions`?**<br />Answer  :     <br />    ```java
     ScheduleOptions options = scheduler.NOW();
     scheduler.schedule(myJob, options);
     ```
@@ -220,7 +220,7 @@ jobManager.addJob("my/topic", payload);
 #### Advanced Topics
 36. **What is the `org.apache.sling.commons.scheduler.Scheduler` service?**<br />Answer  :  The main service used for programmatic scheduling.
 37. **Can you schedule a job to run every 5 seconds?**<br />Answer  :  Yes: `0/5 * * * * ?`.
-38. **How to ensure a scheduler only runs on Author?**<br />Answer  :  ```java
+38. **How to ensure a scheduler only runs on Author?**<br />Answer  : <br />  ```java
     @Component(service = Runnable.class, 
                property = "scheduler.expression=0 0 * * * ?")
     // Deployment should ensure this config only exists on Author runmode
