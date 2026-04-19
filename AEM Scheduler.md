@@ -196,19 +196,21 @@ jobManager.addJob("my/topic", payload);
 #### Scenarios (With Code Snippets)
 25. **Code to schedule a job every day at 1 AM?**<br />Answer  :  `@AttributeDefinition(default = "0 0 1 * * ?")`
 26. **How to read a property from the OSGi config in the `run()` method?**<br />Answer  :  Store the config value in a private variable during `@Activate`.
-27. **How to log the start and end of a scheduler?**<br />Answer  :  <br /> ```java
+27. **How to log the start and end of a scheduler?**<br />Answer  :  <br />
+    ```java
     public void run() {
         long start = System.currentTimeMillis();
         // logic
         logger.info("Time taken: {} ms", System.currentTimeMillis() - start);
     }
     ```
-28. **How to run a scheduler only once on activation?**<br />Answer  :  Set `scheduler.expression` to a past date or use `scheduler.schedule()` with a `ScheduleOptions` object.
-29. **How to use `ScheduleOptions`?**<br />Answer  :     <br />    ```java
+29. **How to run a scheduler only once on activation?**<br />Answer  :  Set `scheduler.expression` to a past date or use `scheduler.schedule()` with a `ScheduleOptions` object.
+30. **How to use `ScheduleOptions`?**<br />Answer  :     <br />
+     ```java
     ScheduleOptions options = scheduler.NOW();
     scheduler.schedule(myJob, options);
     ```
-30. **How to pass parameters to a Job?**<br />Answer  :  Use `options.config(myMap)`.
+32. **How to pass parameters to a Job?**<br />Answer  :  Use `options.config(myMap)`.
 
 #### Troubleshooting
 31. **The scheduler is not running. What is the first thing to check?**<br />Answer  :  Check if the OSGi component is "Satisfied" or "Active" in the System Console.
@@ -220,13 +222,14 @@ jobManager.addJob("my/topic", payload);
 #### Advanced Topics
 36. **What is the `org.apache.sling.commons.scheduler.Scheduler` service?**<br />Answer  :  The main service used for programmatic scheduling.
 37. **Can you schedule a job to run every 5 seconds?**<br />Answer  :  Yes: `0/5 * * * * ?`.
-38. **How to ensure a scheduler only runs on Author?**<br />Answer  : <br />  ```java
+38. **How to ensure a scheduler only runs on Author?**<br />Answer  : <br />
+    ```java
     @Component(service = Runnable.class, 
                property = "scheduler.expression=0 0 * * * ?")
     // Deployment should ensure this config only exists on Author runmode
     ```
-39. **What is the maximum number of threads in the scheduler pool?**<br />Answer  :  Default is 5 (configurable in "Apache Sling Scheduler Service" OSGi config).
-40. **How to change the scheduler thread pool size?**<br />Answer  :  Via OSGi config: `org.apache.sling.commons.scheduler.impl.QuartzScheduler`.
+40. **What is the maximum number of threads in the scheduler pool?**<br />Answer  :  Default is 5 (configurable in "Apache Sling Scheduler Service" OSGi config).
+41. **How to change the scheduler thread pool size?**<br />Answer  :  Via OSGi config: `org.apache.sling.commons.scheduler.impl.QuartzScheduler`.
 
 #### AEM as a Cloud Service (AEMaaCS)
 41. **Is the Scheduler supported in AEM Cloud?**<br />Answer  :  Yes, but `LEADER` mode is highly recommended.
