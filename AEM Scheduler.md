@@ -40,8 +40,9 @@ public @interface SchedulerConfig {
     String scheduler_name() default "Custom Cron Scheduler";
 }
 
-
+```
 **2. Scheduler Implementation:**
+
 ```java
 package com.mysite.core.schedulers;
 
