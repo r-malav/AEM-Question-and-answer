@@ -79,6 +79,27 @@ Bundles are the building blocks of AEM logic.
 | **Flexibility** | Low (tied to one path) | High (works for any node with the resourceType) |
 | **Use Case** | Admin/Utility endpoints | Component rendering logic |
 
+```
+@Component(service = Servlet.class)
+@SlingServletResourceTypes(
+    resourceTypes = "myproject/components/content/mycomponent",
+    methods = {"GET", "POST"},
+    selectors = {"customselector"},
+    extensions = {"html", "json"}
+)
+public class MyResourceTypeServlet extends SlingAllMethodsServlet {
+
+```
+
+```
+@Component(service = Servlet.class)
+@SlingServletPaths(value = {"/bin/myproject/sample", "/content/myproject/api"})
+public class MyPathBasedServlet extends SlingAllMethodsServlet {
+```
+<img width="720" height="253" alt="image" src="https://github.com/user-attachments/assets/0188533d-8cca-47e7-afab-d40bfc5b2dad" />
+<img width="720" height="220" alt="image" src="https://github.com/user-attachments/assets/6bff3790-ce2b-47af-8332-a7966d72ed02" />
+<img width="720" height="267" alt="image" src="https://github.com/user-attachments/assets/abb7ca37-a5f9-4ea5-bb9f-72bffec8e371" />
+
 ---
 
 ## 8. AEMaaCS vs On-Premise
