@@ -30,12 +30,10 @@ This is the all discussed topics: **Sling Models, Servlets, OSGi Services, Servi
     @Model(
     adaptables = Resource.class,
     resourceType = "my-project/components/content/my-component",
-    defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL
-)
-@Exporter(name = "jackson", extensions = "json", selector = "model")
-public class MyModelExporter {
-     ```
-     ----
+    defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL) 
+    @Exporter(name = "jackson", extensions = "json", selector = "model")
+    public class MyModelExporter {
+    ```
 25. **Lombok with Models**<br />Answer  :   Yes, use `@Getter` to reduce code.
 26. **Unit Testing**<br />Answer  :   Use AEM Mocks.
 
