@@ -102,9 +102,20 @@ This is the all discussed topics: **Sling Models, Servlets, OSGi Services, Servi
   <br />Answer  :    The OSGi framework will overwrite one with the other; they must have unique names after the `~` symbol.
 38. **What is the `configurationPolicy` in `@Component`?**
   <br />Answer  :    It determines if a component requires a config to start (`REQUIRE`), ignores configs (`IGNORE`), or uses them if available (`OPTIONAL`).
-39. **How do you update a factory config programmatically?**
+```
+@Component(
+    service = MyService.class,
+    configurationPolicy = ConfigurationPolicy.REQUIRE // or OPTIONAL, IGNORE
+)
+public class MyServiceImpl implements MyService {
+    // ...
+}
+
+```
+
+40. **How do you update a factory config programmatically?**
   <br />Answer  :    Use the `ConfigurationAdmin` service to get the factory configuration by PID and call `update(Dictionary)`.
-40. **When should you use a Factory Config over a standard Config?**
+41. **When should you use a Factory Config over a standard Config?**
   <br />Answer  :    When you need a variable number of service instances (like multiple RSS feeds or multiple SMTP servers).
 
 #### **Troubleshooting & Circular References (41-50)**
