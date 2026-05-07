@@ -26,8 +26,17 @@ This is the all discussed topics: **Sling Models, Servlets, OSGi Services, Servi
 21. **Model Factory**<br />Answer  :   Service to create models with better error handling.
 22. **Difference `adaptTo` vs `createModel`**<br />Answer  :   `createModel` throws exceptions; `adaptTo` returns null.
 23. **Headless support**<br />Answer  :   Use `@Exporter` and `.model.json` extension.
-24. **Lombok with Models**<br />Answer  :   Yes, use `@Getter` to reduce code.
-25. **Unit Testing**<br />Answer  :   Use AEM Mocks.
+    ```
+    @Model(
+    adaptables = Resource.class,
+    resourceType = "my-project/components/content/my-component",
+    defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL
+)
+@Exporter(name = "jackson", extensions = "json", selector = "model")
+public class MyModelExporter {
+    ```
+25. **Lombok with Models**<br />Answer  :   Yes, use `@Getter` to reduce code.
+26. **Unit Testing**<br />Answer  :   Use AEM Mocks.
 
 
 ---
